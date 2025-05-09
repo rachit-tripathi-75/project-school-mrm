@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".fragments.BasicInfoFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical"
+                android:padding="@dimen/_10sdp">
+
+                <!-- Account Options -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- Personal Information -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cvPersonalInformation"
+                        style="@style/AccountOptionCard"
+                        android:layout_marginBottom="8dp"
+                        android:backgroundTint="@color/white">
+
+                        <LinearLayout style="@style/AccountOptionLayout">
+
+                            <FrameLayout style="@style/IconContainer">
+
+                                <ImageView
+                                    style="@style/OptionIcon"
+                                    android:src="@drawable/ic_person" />
+                            </FrameLayout>
+
+                            <LinearLayout style="@style/OptionTextContainer">
+
+                                <TextView
+                                    style="@style/OptionTitle"
+                                    android:text="Full Name" />
+
+                                <TextView
+                                    android:id="@+id/tvStudentName"
+                                    style="@style/OptionDescription"
+                                    android:text="Student Name" />
+                            </LinearLayout>
+
+                            <ImageView
+                                style="@style/ChevronIcon"
+                                android:src="@drawable/ic_chevron_right" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Academic Records -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cvAcademicRecords"
+                        style="@style/AccountOptionCard"
+                        android:layout_marginBottom="8dp"
+                        android:backgroundTint="@color/white">
+
+                        <LinearLayout style="@style/AccountOptionLayout">
+
+                            <FrameLayout style="@style/IconContainer">
+
+                                <ImageView
+                                    style="@style/OptionIcon"
+                                    android:src="@drawable/ic_email_address" />
+                            </FrameLayout>
+
+                            <LinearLayout style="@style/OptionTextContainer">
+
+                                <TextView
+                                    style="@style/OptionTitle"
+                                    android:text="Email Address" />
+
+                                <TextView
+                                    android:id="@+id/tvStudentEmail"
+                                    style="@style/OptionDescription"
+                                    android:text="student@example.com" />
+                            </LinearLayout>
+
+                            <ImageView
+                                style="@style/ChevronIcon"
+                                android:src="@drawable/ic_chevron_right" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Payment History -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cvPaymentHistory"
+                        style="@style/AccountOptionCard"
+                        android:layout_marginBottom="8dp"
+                        android:backgroundTint="@color/white">
+
+                        <LinearLayout style="@style/AccountOptionLayout">
+
+                            <FrameLayout style="@style/IconContainer">
+
+                                <ImageView
+                                    style="@style/OptionIcon"
+                                    android:layout_width="14dp"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/ic_phone" />
+                            </FrameLayout>
+
+                            <LinearLayout style="@style/OptionTextContainer">
+
+                                <TextView
+                                    style="@style/OptionTitle"
+                                    android:text="Phone Number" />
+
+                                <TextView
+                                    android:id="@+id/tvStudentPhoneNumber"
+                                    style="@style/OptionDescription"
+                                    android:text="+91 1234567890" />
+                            </LinearLayout>
+
+                            <ImageView
+                                style="@style/ChevronIcon"
+                                android:src="@drawable/ic_chevron_right" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Privacy & Security -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cvPriacyAndSecurity"
+                        style="@style/AccountOptionCard"
+                        android:layout_marginBottom="8dp"
+                        android:backgroundTint="@color/white">
+
+                        <LinearLayout style="@style/AccountOptionLayout">
+
+                            <FrameLayout style="@style/IconContainer">
+
+                                <ImageView
+                                    style="@style/OptionIcon"
+                                    android:src="@drawable/ic_calendar_icon" />
+                            </FrameLayout>
+
+                            <LinearLayout style="@style/OptionTextContainer">
+
+                                <TextView
+                                    style="@style/OptionTitle"
+                                    android:text="Date of Birth" />
+
+                                <TextView
+                                    android:id="@+id/tvStudentDOB"
+                                    style="@style/OptionDescription"
+                                    android:text="January 01 2000" />
+                            </LinearLayout>
+
+                            <ImageView
+                                style="@style/ChevronIcon"
+                                android:src="@drawable/ic_chevron_right" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Settings -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cvSettings"
+                        style="@style/AccountOptionCard"
+                        android:layout_marginBottom="8dp"
+                        android:backgroundTint="@color/white">
+
+                        <LinearLayout style="@style/AccountOptionLayout">
+
+                            <FrameLayout style="@style/IconContainer">
+
+                                <ImageView
+                                    style="@style/OptionIcon"
+                                    android:src="@drawable/ic_location" />
+                            </FrameLayout>
+
+                            <LinearLayout style="@style/OptionTextContainer">
+
+                                <TextView
+                                    style="@style/OptionTitle"
+                                    android:text="Address" />
+
+                                <TextView
+                                    android:id="@+id/tvStudentAddress"
+                                    style="@style/OptionDescription"
+                                    android:text="Kanpur, Uttar Pradesh" />
+                            </LinearLayout>
+
+                            <ImageView
+                                style="@style/ChevronIcon"
+                                android:src="@drawable/ic_chevron_right" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</FrameLayout>

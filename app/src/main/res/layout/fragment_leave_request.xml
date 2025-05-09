@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".fragments.LeaveRequestFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tvBalanceLeave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:text="Balance Leave :"
+            android:textColor="#666666"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Date Selection Section -->
+        <TextView
+            android:id="@+id/tvFromDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:text="From Date"
+            android:textColor="#666666"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvBalanceLeave" />
+
+        <TextView
+            android:id="@+id/tvFromDateSelector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:background="@drawable/rounded_border_purple"
+            android:padding="12dp"
+            android:text="Select"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@id/tvFromDate"
+            app:layout_constraintStart_toEndOf="@id/tvFromDate"
+            app:layout_constraintTop_toTopOf="@id/tvFromDate" />
+
+        <TextView
+            android:id="@+id/tvToDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:text="To Date"
+            android:textColor="#666666"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@id/tvFromDateSelector"
+            app:layout_constraintTop_toTopOf="@id/tvFromDate" />
+
+        <TextView
+            android:id="@+id/tvToDateSelector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:background="@drawable/rounded_border_purple"
+            android:padding="12dp"
+            android:text="Select"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@id/tvToDate"
+            app:layout_constraintStart_toEndOf="@id/tvToDate"
+            app:layout_constraintTop_toTopOf="@id/tvToDate" />
+
+        <!-- Number of Days -->
+        <TextView
+            android:id="@+id/tvNoOfDays"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:text="No. Of Days : 0"
+            android:textColor="#666666"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvFromDate" />
+
+        <!-- Leave Type Spinner -->
+
+        <TextView
+            android:id="@+id/tvSelectLeaveType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="@dimen/_15sdp"
+            android:text="Select Leave Type"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvNoOfDays" />
+
+        <Spinner
+            android:id="@+id/spinnerLeaveType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:background="@drawable/rounded_border_gray"
+            android:hint="Select Leave Type"
+            android:padding="16dp"
+            android:spinnerMode="dropdown"
+            app:layout_constraintTop_toBottomOf="@id/tvSelectLeaveType" />
+
+        <!-- Reason EditText -->
+        <EditText
+            android:id="@+id/etReason"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/rounded_border_gray"
+            android:gravity="top"
+            android:hint="Enter Reason (in less than 50 words)"
+            android:maxLength="50"
+            android:padding="16dp"
+            android:textColorHint="#999999"
+            app:layout_constraintTop_toBottomOf="@id/spinnerLeaveType" />
+
+        <!-- Submit Button -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnSubmit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/btn_background"
+            android:text="Submit"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@id/etReason" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</FrameLayout>
