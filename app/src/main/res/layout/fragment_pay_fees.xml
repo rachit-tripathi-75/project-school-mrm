@@ -7,21 +7,20 @@
     android:background="@color/white"
     tools:context=".fragments.PayFeesFragment">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/payFeesCard"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:backgroundTint="@color/white"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="2dp">
 
-        <androidx.core.widget.NestedScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/installmentCard"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:fillViewport="true"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp"
+            app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -30,237 +29,674 @@
                 android:padding="16dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Fee Details"
-                    android:textColor="@color/black"
-                    android:textSize="18sp"
+                    android:text="Select Installment Months:"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Select fee type and amount"
-                    android:textColor="@color/gray_600"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Fee Type"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
-
-                <Spinner
-                    android:id="@+id/feeTypeSpinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/spinner_background"
-                    android:entries="@array/fee_types"
-                    android:padding="8dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Amount (₹)"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
-
-                <EditText
-                    android:id="@+id/amountEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/spinner_background"
-                    android:hint="Enter amount"
-                    android:inputType="number"
-                    android:padding="12dp"
-                    android:text="0" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Payment Method"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
-
                 <RadioGroup
-                    android:id="@+id/paymentMethodRadioGroup"
+                    android:id="@+id/installmentRadioGroup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp">
 
-                    <androidx.cardview.widget.CardView
+                    <RadioButton
+                        android:id="@+id/radioAprilJune"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        app:cardBackgroundColor="@color/white"
-                        app:cardCornerRadius="8dp"
-                        app:cardElevation="0dp"
-                        app:contentPadding="12dp">
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/radio_selector"
+                        android:button="@null"
+                        android:drawableStart="@drawable/radio_button_selector"
+                        android:drawablePadding="8dp"
+                        android:padding="12dp"
+                        android:text="" />
 
-                        <RadioButton
-                            android:id="@+id/cardRadioButton"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:button="@null"
-                            android:checked="true"
-                            android:drawableStart="?android:attr/listChoiceIndicatorSingle"
-                            android:drawableEnd="@drawable/ic_credit_card"
-                            android:background="@drawable/spinner_background"
-                            android:drawablePadding="8dp"
-                            android:text="Credit/Debit Card"
-                            android:textColor="@color/black" />
-                    </androidx.cardview.widget.CardView>
-
-                    <androidx.cardview.widget.CardView
+                    <RadioButton
+                        android:id="@+id/radioJulySeptember"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        app:cardBackgroundColor="@color/white"
-                        app:cardCornerRadius="8dp"
-                        app:cardElevation="0dp"
-                        app:contentPadding="12dp">
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/radio_selector"
+                        android:button="@null"
+                        android:drawableStart="@drawable/radio_button_selector"
+                        android:drawablePadding="8dp"
+                        android:padding="12dp"
+                        android:text="" />
 
-                        <RadioButton
-                            android:id="@+id/upiRadioButton"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:button="@null"
-                            android:background="@drawable/spinner_background"
-                            android:drawableStart="?android:attr/listChoiceIndicatorSingle"
-                            android:drawableEnd="@drawable/ic_wallet"
-                            android:drawablePadding="8dp"
-                            android:text="UPI Payment"
-                            android:textColor="@color/black" />
-                    </androidx.cardview.widget.CardView>
-
-                    <androidx.cardview.widget.CardView
+                    <RadioButton
+                        android:id="@+id/radioOctoberDecember"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:cardBackgroundColor="@color/white"
-                        app:cardCornerRadius="8dp"
-                        app:cardElevation="0dp"
-                        app:contentPadding="12dp">
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/radio_selector"
+                        android:button="@null"
+                        android:drawableStart="@drawable/radio_button_selector"
+                        android:drawablePadding="8dp"
+                        android:padding="12dp"
+                        android:text="" />
 
-                        <RadioButton
-                            android:id="@+id/netbankingRadioButton"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:button="@null"
-                            android:background="@drawable/spinner_background"
-                            android:drawableStart="?android:attr/listChoiceIndicatorSingle"
-                            android:drawableEnd="@drawable/ic_globe"
-                            android:drawablePadding="8dp"
-                            android:text="Internet Banking"
-                            android:textColor="@color/black" />
-                    </androidx.cardview.widget.CardView>
+                    <RadioButton
+                        android:id="@+id/radioJanuaryMarch"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/radio_selector"
+                        android:button="@null"
+                        android:drawableStart="@drawable/radio_button_selector"
+                        android:drawablePadding="8dp"
+                        android:padding="12dp"
+                        android:text="" />
                 </RadioGroup>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
-                <!-- Card Payment Details (Visibility controlled by code) -->
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:paddingHorizontal="32dp"
+            android:paddingVertical="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/installmentCard">
+
+            <ProgressBar
+                android:id="@+id/progressBarBehindSubmitButton"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_centerInParent="true"
+                android:visibility="gone" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSubmit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:backgroundTint="@color/blue_500"
+                android:text="Submit"
+                android:textColor="@color/white"
+                app:cornerRadius="8dp" />
+
+        </RelativeLayout>
+
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/llFeeDetailsCard"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
                 <LinearLayout
-                    android:id="@+id/cardDetailsLayout"
+                    android:id="@+id/llGoBack"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:orientation="vertical">
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginBottom="@dimen/_10sdp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/back" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Card Number"
-                        android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:layout_gravity="center"
+                        android:layout_marginStart="@dimen/_10sdp"
+                        android:fontFamily="@font/poppins_medium"
+                        android:text="Go Back"
+                        android:textStyle="bold" />
 
-                    <EditText
-                        android:id="@+id/cardNumberEditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:layout_marginTop="8dp"
-                        android:background="@drawable/spinner_background"
-                        android:hint="1234 5678 9012 3456"
-                        android:inputType="number"
-                        android:maxLength="19"
-                        android:padding="12dp" />
+                </LinearLayout>
+
+                <!-- Student Information -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cvStudentInformationContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:orientation="horizontal">
+                        android:orientation="vertical"
+                        android:padding="16dp">
 
-                        <LinearLayout
-                            android:layout_width="0dp"
+                        <TextView
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:text="Student Information"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <GridLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:columnCount="2"
+                            android:rowCount="3">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Expiry Date"
-                                android:textColor="@color/black"
-                                android:textSize="14sp" />
+                                android:layout_columnWeight="1"
+                                android:layout_marginTop="4dp"
+                                android:text="Enrollment Number:"
+                                android:textColor="@color/gray_500"
+                                android:textSize="12sp" />
 
-                            <EditText
-                                android:id="@+id/expiryDateEditText"
-                                android:layout_width="match_parent"
-                                android:layout_height="48dp"
-                                android:layout_marginTop="8dp"
-                                android:background="@drawable/spinner_background"
-                                android:hint="MM/YY"
-                                android:inputType="date"
-                                android:maxLength="5"
-                                android:padding="12dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
+                            <TextView
+                                android:id="@+id/enrollmentNumberText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_columnWeight="1"
+                                android:layout_marginTop="4dp"
+                                android:text="000924000001"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="CVV"
-                                android:textColor="@color/black"
-                                android:textSize="14sp" />
+                                android:layout_columnWeight="1"
+                                android:layout_marginTop="4dp"
+                                android:text="Scholar Number:"
+                                android:textColor="@color/gray_500"
+                                android:textSize="12sp" />
 
-                            <EditText
-                                android:id="@+id/cvvEditText"
-                                android:layout_width="match_parent"
-                                android:layout_height="48dp"
-                                android:layout_marginTop="8dp"
-                                android:background="@drawable/spinner_background"
-                                android:hint="123"
-                                android:inputType="numberPassword"
-                                android:maxLength="3"
-                                android:padding="12dp" />
-                        </LinearLayout>
+                            <TextView
+                                android:id="@+id/scholarNumberText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_columnWeight="1"
+                                android:layout_marginTop="4dp"
+                                android:text="1675"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_columnWeight="1"
+                                android:layout_marginTop="4dp"
+                                android:text="Class:"
+                                android:textColor="@color/gray_500"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:id="@+id/classText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_columnWeight="1"
+                                android:layout_marginTop="4dp"
+                                android:text="1"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_columnWeight="1"
+                                android:layout_marginTop="4dp"
+                                android:text="Section:"
+                                android:textColor="@color/gray_500"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:id="@+id/sectionText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_columnWeight="1"
+                                android:layout_marginTop="4dp"
+                                android:text="1-A"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+                        </GridLayout>
                     </LinearLayout>
-                </LinearLayout>
+                </androidx.cardview.widget.CardView>
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/payNowButton"
+                <!-- Fee Structure -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cvFeeStructureContent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:background="@drawable/btn_background"
-                    android:padding="12dp"
-                    android:text="Pay Now"
-                    android:textColor="@color/white" />
-            </LinearLayout>
+                    android:layout_marginTop="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp">
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="ACADEMIC FEE"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:id="@+id/feeItemsContainer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:orientation="vertical">
+
+                            <!-- Fee items will be added dynamically -->
+                            <LinearLayout
+                                android:id="@+id/ll1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:background="@drawable/fee_item_background"
+                                android:orientation="horizontal"
+                                android:padding="12dp">
+
+                                <TextView
+                                    android:id="@+id/tvFeeType1"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="EDUCATION FEE (April-June)" />
+
+                                <TextView
+                                    android:id="@+id/tvFeeType1Amount"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Rs. 5610.00 /-"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:background="@drawable/fee_item_background"
+                                android:orientation="horizontal"
+                                android:padding="12dp">
+
+                                <TextView
+                                    android:id="@+id/tvFeeType2"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="EXAM FEE (April-June)" />
+
+                                <TextView
+                                    android:id="@+id/tvFeeType2Amount"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Rs. 250.00 /-"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:background="@drawable/fee_item_background"
+                                android:orientation="horizontal"
+                                android:padding="12dp">
+
+                                <TextView
+                                    android:id="@+id/tvFeeType3"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="FOUNDATION FEE (April-June)" />
+
+                                <TextView
+                                    android:id="@+id/tvFeeType3Amount"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Rs. 750.00 /-"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:background="@drawable/fee_item_background"
+                                android:orientation="horizontal"
+                                android:padding="12dp">
+
+                                <TextView
+                                    android:id="@+id/tvFeeType4"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="VEHICLE FEE" />
+
+                                <TextView
+                                    android:id="@+id/tvFeeType4Amount"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Rs. 3300.00 /-"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:background="@drawable/fee_item_background"
+                                android:orientation="horizontal"
+                                android:padding="12dp">
+
+                                <TextView
+                                    android:id="@+id/tvFeeType5"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="VEHICLE FEE" />
+
+                                <TextView
+                                    android:id="@+id/tvFeeType5Amount"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Rs. 3300.00 /-"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:background="@drawable/fee_item_background"
+                                android:orientation="horizontal"
+                                android:padding="12dp">
+
+                                <TextView
+                                    android:id="@+id/tvFeeType6"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="VEHICLE FEE" />
+
+                                <TextView
+                                    android:id="@+id/tvFeeType6Amount"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Rs. 3300.00 /-"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:background="@drawable/fee_item_background"
+                                android:orientation="horizontal"
+                                android:padding="12dp">
+
+                                <TextView
+                                    android:id="@+id/tvFeeType7"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="VEHICLE FEE" />
+
+                                <TextView
+                                    android:id="@+id/tvFeeType7Amount"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Rs. 3300.00 /-"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="16dp"
+                                android:background="@drawable/total_amount_background"
+                                android:orientation="horizontal"
+                                android:padding="12dp">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Total Amount (All Fee Types):"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/totalAmountText"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Rs. 9910.00 /-"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Payment -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cvPaymentContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:visibility="visible"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Fee Details"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="Select fee type and amount"
+                            android:textColor="@color/gray_500"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:text="Fee Type"
+                            android:textSize="14sp" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/feeTypeDropdown"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="none"
+                                android:text="Tuition Fee" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:text="Amount (₹)"
+                            android:textSize="14sp" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/amountEditText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="numberDecimal"
+                                android:text="0" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:text="Payment Method"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <RadioGroup
+                            android:id="@+id/paymentMethodRadioGroup"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp">
+
+                            <RadioButton
+                                android:id="@+id/radioCard"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:background="@drawable/radio_selector"
+                                android:button="@null"
+                                android:checked="true"
+                                android:drawableStart="@drawable/radio_button_selector"
+                                android:drawableEnd="@drawable/ic_credit_card"
+                                android:drawablePadding="8dp"
+                                android:padding="12dp"
+                                android:text="Credit/Debit Card" />
+
+                            <RadioButton
+                                android:id="@+id/radioUpi"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:background="@drawable/radio_selector"
+                                android:button="@null"
+                                android:drawableStart="@drawable/radio_button_selector"
+                                android:drawableEnd="@drawable/ic_smartphone"
+                                android:drawablePadding="8dp"
+                                android:padding="12dp"
+                                android:text="UPI Payment" />
+
+                            <RadioButton
+                                android:id="@+id/radioNetBanking"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:background="@drawable/radio_selector"
+                                android:button="@null"
+                                android:drawableStart="@drawable/radio_button_selector"
+                                android:drawableEnd="@drawable/ic_globe"
+                                android:drawablePadding="8dp"
+                                android:padding="12dp"
+                                android:text="Internet Banking" />
+                        </RadioGroup>
+
+                        <LinearLayout
+                            android:id="@+id/cardDetailsLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Card Number"
+                                android:textSize="14sp" />
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/cardNumberEditText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint="1234 5678 9012 3456"
+                                    android:inputType="number"
+                                    android:maxLength="19" />
+                            </com.google.android.material.textfield.TextInputLayout>
+                        </LinearLayout>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/payNowButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="24dp"
+                            android:backgroundTint="@color/green_500"
+                            android:paddingVertical="12dp"
+                            android:text="Pay Now"
+                            android:textColor="@color/white"
+                            app:cornerRadius="8dp" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Nothing to show -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cvNothingToShow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:visibility="gone"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:alpha="0.5"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:layout_width="@dimen/_40sdp"
+                            android:layout_height="@dimen/_40sdp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/nodatafound" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:text="No data found" />
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+
+            </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
 
-    </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </FrameLayout>

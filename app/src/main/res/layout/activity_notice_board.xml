@@ -95,7 +95,7 @@
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Announcements"
+                    android:text="Student"
                     app:chipBackgroundColor="@color/chip_background_purple" />
 
             </com.google.android.material.chip.ChipGroup>
@@ -108,14 +108,91 @@
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/noticeRecyclerView"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:padding="16dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_notice" />
+                android:layout_height="match_parent">
+
+                <FrameLayout
+                    android:id="@+id/container_loading"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:padding="@dimen/_16sdp"
+                    android:visibility="gone">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/white"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="4dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <com.facebook.shimmer.ShimmerFrameLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+
+                                    <View
+                                        android:layout_width="200dp"
+                                        android:layout_height="24dp"
+                                        android:background="@color/shimmer_color" />
+
+                                    <View
+                                        android:layout_width="150dp"
+                                        android:layout_height="16dp"
+                                        android:layout_marginTop="8dp"
+                                        android:background="@color/shimmer_color" />
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="16dp"
+                                        android:orientation="vertical">
+
+                                        <include layout="@layout/item_shimmer_subject" />
+
+                                        <include layout="@layout/item_shimmer_subject" />
+
+                                        <include layout="@layout/item_shimmer_subject" />
+
+                                        <include layout="@layout/item_shimmer_subject" />
+
+                                        <include layout="@layout/item_shimmer_subject" />
+
+                                    </LinearLayout>
+
+                                </LinearLayout>
+
+                            </com.facebook.shimmer.ShimmerFrameLayout>
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </FrameLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvNotice"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:clipToPadding="false"
+                    android:padding="@dimen/_16sdp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_notice" />
+
+            </RelativeLayout>
+
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

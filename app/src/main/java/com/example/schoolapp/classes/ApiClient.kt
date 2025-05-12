@@ -7,7 +7,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClient {
-    private const val BASE_URL = "https://erp.apschitrakoot.in/"
+    const val BASE_URL = "https://erp.apschitrakoot.in/"
 
     val loginInstance: ApiServices.LoginApiService by lazy {
         Retrofit.Builder()
@@ -48,4 +48,37 @@ object ApiClient {
             .build()
             .create(ApiServices.GetTimeTableApiServices::class.java)
     }
+
+    val getNoticeDetailInstance: ApiServices.GetNoticeDetailApiService by lazy {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ApiServices.GetNoticeDetailApiService::class.java)
+    }
+
+    val downloadPdfInstance: ApiServices.DownloadPdfApiService by lazy {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ApiServices.DownloadPdfApiService::class.java)
+    }
+
+    val feeInstallmentInstance: ApiServices.FeeInstallmentsApiService by lazy {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ApiServices.FeeInstallmentsApiService::class.java)
+    }
+
+    val feeInstallmentDetailInstance: ApiServices.FeeInstallmentDetailsApiService by lazy {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ApiServices.FeeInstallmentDetailsApiService::class.java)
+    }
+
 }
