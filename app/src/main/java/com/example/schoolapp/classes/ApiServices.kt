@@ -1,15 +1,19 @@
 package com.example.schoolapp.classes
 
+
+import com.example.schoolapp.requests.PaymentHistoryRequest
 import com.example.schoolapp.responses.FeeInstallmentDetailResponse
 import com.example.schoolapp.responses.FeeInstallmentsResponse
 import com.example.schoolapp.responses.GetExamDetailResponse
 import com.example.schoolapp.responses.GetMarksResponse
 import com.example.schoolapp.responses.LoginResponse
 import com.example.schoolapp.responses.NoticeDetailResponse
+import com.example.schoolapp.responses.PaymentHistoryResponse
 import com.example.schoolapp.responses.StudentDetailResponse
 import com.example.schoolapp.responses.TimeTableResponse
 import okhttp3.ResponseBody
 import retrofit2.Call
+import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.Header
@@ -106,6 +110,16 @@ class ApiServices {
             @Field("fee_id") feeId: String,
             @Field("sessionid") sessionId: String
         ): Call<FeeInstallmentDetailResponse>
+    }
+
+    interface PaymentHistoryAPiService {
+        @POST("API/getStudentLedger")
+        fun getStudentPaymentHistory(
+            @Header("Authorization") authorization: String,
+            @Header("Content-Type") contentType: String,
+            @Header("Cookie") cookie: String,
+            @Body paymentHistoryModel: PaymentHistoryRequest
+        ): Call<PaymentHistoryResponse>
     }
 
 }

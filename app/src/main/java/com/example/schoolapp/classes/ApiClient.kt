@@ -5,6 +5,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 
 object ApiClient {
     const val BASE_URL = "https://erp.apschitrakoot.in/"
@@ -79,6 +80,14 @@ object ApiClient {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(ApiServices.FeeInstallmentDetailsApiService::class.java)
+    }
+
+    val paymentHistoryInstance: ApiServices.PaymentHistoryAPiService by lazy {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ApiServices.PaymentHistoryAPiService::class.java)
     }
 
 }
