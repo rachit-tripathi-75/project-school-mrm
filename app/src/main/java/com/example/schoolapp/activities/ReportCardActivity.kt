@@ -1,6 +1,7 @@
 package com.example.schoolapp.activities
 
 import android.animation.ValueAnimator
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -60,6 +61,7 @@ class ReportCardActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityReportCardBinding.inflate(layoutInflater)

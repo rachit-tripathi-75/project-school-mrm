@@ -1,8 +1,13 @@
 package com.example.schoolapp.activities
 
+import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.AppCompatButton
@@ -10,15 +15,30 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.example.schoolapp.R
+import com.example.schoolapp.classes.ApiClient
+import com.example.schoolapp.classes.PrefsManager
 import com.example.schoolapp.databinding.ActivityLeaveRequestBinding
 import com.example.schoolapp.fragments.LeaveRequestFragment
 import com.example.schoolapp.fragments.LeaveRequestListFragment
+import com.example.schoolapp.responses.GetStudentLeaveRequestResponse
+import com.example.schoolapp.viewmodels.LeaveRequestListViewModel
+import com.google.gson.Gson
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Response
+import kotlin.getValue
 
 class LeaveRequestActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityLeaveRequestBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityLeaveRequestBinding.inflate(layoutInflater)
@@ -53,6 +73,7 @@ class LeaveRequestActivity : AppCompatActivity() {
         }
 
     }
+
 
     private fun setInitialFragment(fragment: Fragment) {
         val fragmentManager = supportFragmentManager

@@ -26,10 +26,10 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tvTuitionFee"
+                    android:id="@+id/tvFeeType"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tuition Fee"
+                    android:text="Fee Type: "
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -56,17 +56,80 @@
                         android:textColor="@color/gray_600"
                         android:textSize="12sp" />
                 </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_marginEnd="4dp"
+                        android:src="@drawable/ic_calendar"
+                        app:tint="@color/gray_600" />
+
+                    <TextView
+                        android:id="@+id/tvInstallment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Installment"
+                        android:textColor="@color/gray_600"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_marginEnd="4dp"
+                        android:visibility="gone"
+                        android:src="@drawable/ic_calendar"
+                        app:tint="@color/gray_600" />
+
+                    <TextView
+                        android:id="@+id/tvRemark"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Remark: "
+                        android:visibility="gone"
+                        android:textColor="@color/gray_600"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
             </LinearLayout>
 
             <TextView
-                android:id="@+id/tvStatus"
+                android:id="@+id/tvType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/status_background"
+                android:background="@drawable/payment_debitcredit_background"
                 android:paddingHorizontal="12dp"
                 android:paddingVertical="4dp"
-                android:text="Paid"
-                android:textColor="@color/green_600"
+                android:text="Debit"
+                android:textColor="@color/blue_600"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvPaymentMode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:background="@drawable/payment_mode_background"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="4dp"
+                android:text="Payment Mode"
+                android:visibility="gone"
+                android:textColor="@color/gray_800"
                 android:textSize="12sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -89,7 +152,8 @@
                     android:layout_height="wrap_content"
                     android:text="Transaction ID: TXN78945"
                     android:textColor="@color/gray_600"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/tvAmount"
@@ -113,21 +177,16 @@
                     android:layout_height="36dp"
                     android:layout_marginEnd="8dp"
                     android:background="@drawable/outline_button_background"
-                    android:drawableStart="@drawable/ic_receipt"
                     android:drawablePadding="4dp"
+                    android:focusable="false"
                     android:paddingHorizontal="12dp"
                     android:text="Receipt"
+                    android:visibility="gone"
                     android:textAllCaps="false"
                     android:textColor="@color/blue_800"
                     android:textSize="12sp" />
 
-                <ImageButton
-                    android:id="@+id/btnSeeTransactionDetails"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_chevron_right"
-                    app:tint="@color/purple_700" />
+
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

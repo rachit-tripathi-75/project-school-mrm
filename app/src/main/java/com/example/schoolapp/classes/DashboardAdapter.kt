@@ -93,10 +93,10 @@ class DashboardAdapter(val context: Context, private val items: List<DashboardIt
                     context.startActivity(Intent(context, LeaveRequestActivity::class.java))
                 }
                 8 -> {
-                    context.startActivity(Intent(context, PtaMeetingActivity::class.java))
+                    context.startActivity(Intent(context, HomeWorkActivity::class.java))
                 }
                 9 -> {
-                    context.startActivity(Intent(context, HomeWorkActivity::class.java))
+                    context.startActivity(Intent(context, PtaMeetingActivity::class.java))
                 }
                 10 -> {
                     context.startActivity(Intent(context, GrievanceActivity::class.java))

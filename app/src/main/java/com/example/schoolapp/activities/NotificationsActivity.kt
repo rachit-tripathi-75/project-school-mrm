@@ -1,5 +1,6 @@
 package com.example.schoolapp.activities
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +15,7 @@ class NotificationsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityNotificationsBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityNotificationsBinding.inflate(layoutInflater)

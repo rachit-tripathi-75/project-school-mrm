@@ -90,4 +90,52 @@ object ApiClient {
             .create(ApiServices.PaymentHistoryAPiService::class.java)
     }
 
+    val attendanceInstance: ApiServices.AttendanceApiService by lazy {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ApiServices.AttendanceApiService::class.java)
+    }
+
+    val homeworkInstance: ApiServices.HomeworkApiService by lazy {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ApiServices.HomeworkApiService::class.java)
+    }
+
+    val submitLeaveRequestInstance: ApiServices.SubmitLeaveRequestApiService by lazy {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ApiServices.SubmitLeaveRequestApiService::class.java)
+    }
+
+    val leaveRequestListInstance: ApiServices.GetStudentLeaveRequestApiService by lazy {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ApiServices.GetStudentLeaveRequestApiService::class.java)
+    }
+
+    val subjectNotesInstance: ApiServices.SubjectNotesApiService by lazy {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ApiServices.SubjectNotesApiService::class.java)
+    }
+
+    val academicPlanInstance: ApiServices.AcademicPlanApiService by lazy {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ApiServices.AcademicPlanApiService::class.java)
+    }
+
 }

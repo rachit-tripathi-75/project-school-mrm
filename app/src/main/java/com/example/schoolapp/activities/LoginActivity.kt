@@ -1,6 +1,7 @@
 package com.example.schoolapp.activities
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
@@ -30,6 +31,7 @@ class LoginActivity : AppCompatActivity() {
     private var isPasswordVisible: Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityLoginBinding.inflate(layoutInflater)
@@ -125,6 +127,7 @@ class LoginActivity : AppCompatActivity() {
                     val s = response.body()
                     if (s?.status == 1) {
                         PrefsManager.setSectionId(this@LoginActivity, s.studentData[0].sectionId)
+                        PrefsManager.setUserDetailedInformation(this@LoginActivity, s)
                     }
 
                 } else {

@@ -1,6 +1,7 @@
 package com.example.schoolapp.activities
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -22,19 +23,41 @@ import com.example.schoolapp.adapters.NoticeBoardAdapter
 import com.example.schoolapp.classes.ApiClient
 import com.example.schoolapp.classes.PrefsManager
 import com.example.schoolapp.databinding.ActivityNoticeBoardBinding
+import com.example.schoolapp.networks.NetworkChangeReceiver
 import com.example.schoolapp.responses.LoginResponse
 import com.example.schoolapp.responses.NoticeDetailResponse
 import com.google.android.material.chip.Chip
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Response
 
 class NoticeBoardActivity : AppCompatActivity() {
+
+    var networkChangeReceiver: NetworkChangeReceiver =
+        NetworkChangeReceiver(object : NetworkChangeReceiver.NetworkStatusListener {
+            override fun onNetworkConnected() {
+                binding.llNoInternetFound.visibility = View.GONE
+                binding.swipeRefreshLayout.visibility = View.VISIBLE
+                initialisers()
+                Log.d("networkInterceptorTAG", "inside onNetworkConnected()")
+
+            }
+
+            override fun onNetworkDisconnected() {
+                binding.swipeRefreshLayout.visibility = View.GONE
+                binding.llNoInternetFound.visibility = View.VISIBLE
+                Log.d("networkInterceptorTAG", "inside onNetworkDisconnected()")
+                Snackbar.make(binding.root, "No Internet Connection", Snackbar.LENGTH_LONG).show()
+            }
+        })
+
     private lateinit var binding: ActivityNoticeBoardBinding
     private lateinit var noticeBoardAdapter: NoticeBoardAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityNoticeBoardBinding.inflate(layoutInflater)
@@ -156,4 +179,16 @@ class NoticeBoardActivity : AppCompatActivity() {
 
 
     data class NoticeBoardRecord(val path: String, val id: String, val noticeTitle: String, val dateFrom: String, val noticeDate: String, val type: String, val pdfName: String, val createdOn: String, val status: String, val notifyType: String, val sessionId: String, val noticeDescription: String)
+
+
+    override fun onResume() {
+        super.onResume()
+        NetworkChangeReceiver.registerReceiver(this, networkChangeReceiver)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        NetworkChangeReceiver.unregisterReceiver(this, networkChangeReceiver)
+    }
+
 }

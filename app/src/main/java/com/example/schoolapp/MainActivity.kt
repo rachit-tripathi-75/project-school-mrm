@@ -1,15 +1,22 @@
 package com.example.schoolapp
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ActivityInfo
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.view.animation.AnimationUtils
 import android.view.animation.OvershootInterpolator
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.app.ActivityCompat
+import androidx.core.content.edit
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
@@ -30,28 +37,47 @@ import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
-import androidx.core.content.edit
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navigationHeaderBinding: NavHeaderBinding
+
+    companion object {
+        private const val REQUEST_CODE_NOTIFICATION = 1001
+        private const val REQUEST_CODE_STORAGE = 1002
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private val requiredPermissionsApi33 = arrayOf(
+        android.Manifest.permission.POST_NOTIFICATIONS,
+        android.Manifest.permission.READ_MEDIA_IMAGES,
+        android.Manifest.permission.READ_MEDIA_VIDEO
+    )
+
+    private val requiredPermissionsBelowApi33 = arrayOf(
+        android.Manifest.permission.READ_EXTERNAL_STORAGE,
+        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+    )
+
     private lateinit var bannerPagerAdapter: BannerPagerAdapter
 
-    var networkChangeReceiver: NetworkChangeReceiver = NetworkChangeReceiver(object : NetworkChangeReceiver.NetworkStatusListener {
-        override fun onNetworkConnected() {
-            Log.d("networkInterceptorTAG", "inside onNetworkConnected()")
+    var networkChangeReceiver: NetworkChangeReceiver =
+        NetworkChangeReceiver(object : NetworkChangeReceiver.NetworkStatusListener {
+            override fun onNetworkConnected() {
+                Log.d("networkInterceptorTAG", "inside onNetworkConnected()")
 
-        }
+            }
 
-        override fun onNetworkDisconnected() {
-            Log.d("networkInterceptorTAG", "inside onNetworkDisconnected()")
-            Snackbar.make(binding.root, "No Internet Connection", Snackbar.LENGTH_LONG).show()
-        }
-    })
+            override fun onNetworkDisconnected() {
+                Log.d("networkInterceptorTAG", "inside onNetworkDisconnected()")
+                Snackbar.make(binding.root, "No Internet Connection", Snackbar.LENGTH_LONG).show()
+            }
+        })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -63,8 +89,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         initialise()
+
         listeners()
         setupNavigationDrawer()
+        requestNotificationPermission()
         setupDashboardRecyclerView()
         showCurrentDayAndDate()
         applyAnimations()
@@ -72,6 +100,42 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
+
+    // Function to request storage permission
+    fun requestStoragePermission() {
+        val permissionsToRequest = ArrayList<String>()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // Android 13+ - use new media permissions
+            permissionsToRequest.add(Manifest.permission.READ_MEDIA_IMAGES)
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            // Android 10-12 - only need READ_EXTERNAL_STORAGE
+            permissionsToRequest.add(Manifest.permission.READ_EXTERNAL_STORAGE)
+        } else {
+            // Android 9 and below - need both read and write
+            permissionsToRequest.add(Manifest.permission.READ_EXTERNAL_STORAGE)
+            permissionsToRequest.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        }
+
+        ActivityCompat.requestPermissions(
+            this,
+            permissionsToRequest.toTypedArray(),
+            REQUEST_CODE_STORAGE
+        )
+    }
+
+    // Function to request notification permission (Android 13+ only)
+    fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                REQUEST_CODE_NOTIFICATION
+            )
+        }
+    }
+
 
     private fun initialise() {
 
@@ -136,6 +200,7 @@ class MainActivity : AppCompatActivity() {
             getSharedPreferences(PrefsManager.PREF_NAME, Context.MODE_PRIVATE).edit() { clear() }
         }
 
+
     }
 
     private fun showCurrentDayAndDate() {
@@ -145,6 +210,11 @@ class MainActivity : AppCompatActivity() {
             Locale.getDefault()
         ).format(Calendar.getInstance().time)
 //        binding.tvDay.text = SimpleDateFormat("EEEE", Locale.getDefault()).format(Calendar.getInstance().time)
+    }
+
+    private fun applyForegroundService() {
+        // foreground service for seeing the notification in-app also............ (pending)
+
     }
 
 
@@ -186,13 +256,13 @@ class MainActivity : AppCompatActivity() {
             DashboardItem(R.drawable.ic_report_card, "My Exam Marks"),
             DashboardItem(R.drawable.moneyrupee, "Fee Deposit"),
             DashboardItem(R.drawable.ic_subject_notes, "Subject Notes"),
-            DashboardItem(R.drawable.ic_calendar, "Academic Calendar"),
+            DashboardItem(R.drawable.ic_calendar, "Academic Plan"),
             DashboardItem(R.drawable.ic_leave_request, "Leave Request"),
-            DashboardItem(R.drawable.ic_pta, "PTA"),
+//            DashboardItem(R.drawable.ic_pta, "PTA"),
             DashboardItem(R.drawable.ic_homework, "Home Work"),
-            DashboardItem(R.drawable.ic_grievance, "Grievance"),
-            DashboardItem(R.drawable.ic_activity, "Extra Activity"),
-            DashboardItem(R.drawable.ic_comment, "Student Comment")
+//            DashboardItem(R.drawable.ic_grievance, "Grievance"),
+//            DashboardItem(R.drawable.ic_activity, "Extra Activity"),
+//            DashboardItem(R.drawable.ic_comment, "Student Comment")
         )
     }
 
@@ -221,4 +291,43 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    // Handle permission results
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        when (requestCode) {
+            REQUEST_CODE_NOTIFICATION -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    requestStoragePermission()
+//                    Toast.makeText(this, "Notification permission granted", Toast.LENGTH_SHORT)
+//                        .show()
+                } else {
+                    Toast.makeText(this, "Notification permission denied", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+
+            REQUEST_CODE_STORAGE -> {
+                var allGranted = true
+                for (result in grantResults) {
+                    if (result != PackageManager.PERMISSION_GRANTED) {
+                        allGranted = false
+                        break
+                    }
+                }
+
+                if (allGranted) {
+//                    Toast.makeText(this, "Storage permission granted", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "Storage permission denied", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+
+    }
 }

@@ -1,27 +1,79 @@
 package com.example.schoolapp.activities
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.schoolapp.R
+import com.example.schoolapp.activities.FeeDepositActivity
+import com.example.schoolapp.adapters.AttendanceAdapter
+import com.example.schoolapp.classes.ApiClient
+import com.example.schoolapp.classes.PrefsManager
 import com.example.schoolapp.databinding.ActivityAttendanceRegisterBinding
+import com.example.schoolapp.fragments.PaymentHistoryFragment.PaymentHistoryRecord
+import com.example.schoolapp.models.AttendanceRecordModel
+import com.example.schoolapp.networks.NetworkChangeReceiver
+import com.example.schoolapp.requests.PaymentHistoryRequest
+import com.example.schoolapp.responses.AttendanceResponse
+import com.example.schoolapp.responses.PaymentHistoryResponse
+import com.example.schoolapp.viewmodels.AttendanceViewModel
+import com.example.schoolapp.viewmodels.FeeInstallmentViewModel
+import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Response
 import java.util.Calendar
+import java.util.function.LongFunction
+import kotlin.getValue
 
 class AttendanceRegisterActivity : AppCompatActivity() {
+
+
+
+    var networkChangeReceiver: NetworkChangeReceiver = NetworkChangeReceiver(object : NetworkChangeReceiver.NetworkStatusListener {
+        override fun onNetworkConnected() {
+            binding.llNoInternetFound.visibility = View.GONE
+            binding.clAllContent.visibility = View.VISIBLE
+            initialisers()
+            listeners()
+            setupMonthSpinner()
+            setupAttendanceRecyclerView()
+            Log.d("networkInterceptorTAG", "inside onNetworkConnected()")
+
+        }
+
+        override fun onNetworkDisconnected() {
+            binding.clAllContent.visibility = View.GONE
+            binding.llNoInternetFound.visibility = View.VISIBLE
+            Log.d("networkInterceptorTAG", "inside onNetworkDisconnected()")
+            Snackbar.make(binding.root, "No Internet Connection", Snackbar.LENGTH_LONG).show()
+        }
+    })
+
+
+
+
     private lateinit var binding: ActivityAttendanceRegisterBinding
     private lateinit var attendanceAdapter: AttendanceAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityAttendanceRegisterBinding.inflate(layoutInflater)
@@ -46,7 +98,22 @@ class AttendanceRegisterActivity : AppCompatActivity() {
     private fun listeners() {
         binding.btnShow.setOnClickListener {
             val selectedMonth = binding.spinnerMonth.selectedItem.toString()
-            loadAttendanceData(selectedMonth)
+            when (selectedMonth) {
+                "Jan" -> loadAttendanceData("1")
+                "Feb" -> loadAttendanceData("2")
+                "Mar" -> loadAttendanceData("3")
+                "Apr" -> loadAttendanceData("4")
+                "May" -> loadAttendanceData("5")
+                "Jun" -> loadAttendanceData("6")
+                "Jul" -> loadAttendanceData("7")
+                "Aug" -> loadAttendanceData("8")
+                "Sep" -> loadAttendanceData("9")
+                "Oct" -> loadAttendanceData("10")
+                "Nov" -> loadAttendanceData("11")
+                "Dec" -> loadAttendanceData("12")
+                else -> loadAttendanceData("0")
+            }
+
         }
 
         binding.ivBack.setOnClickListener {
@@ -87,85 +154,88 @@ class AttendanceRegisterActivity : AppCompatActivity() {
         binding.attendanceRecyclerView.adapter = attendanceAdapter
     }
 
-    private fun loadAttendanceData(selectedMonth: String) {
+    private fun loadAttendanceData(month: String) {
         // loaded data from a database or API........
 
-        val records = mutableListOf<AttendanceRecord>()
+        Log.d("herexx", "here0")
+        binding.progressBar.visibility = View.VISIBLE
+        binding.attendanceRecyclerView.visibility = View.GONE
+        binding.llNoDataFound.visibility = View.GONE
+        binding.llInternalServerError.visibility = View.GONE
+        Log.d("monthxxx", month)
 
-        if (selectedMonth == "May") {
-            for (i in 1..4) {
-                records.add(AttendanceRecord("01 May 2023", "Present"))
+        lifecycleScope.launch {
+            try {
+                delay(1500)
+                ApiClient.attendanceInstance.getStudentAttendance(
+                    "Bearer TOKEN_REQUIRED......",
+                    "application/x-www-form-urlencoded",
+                    "ci_session=2t8pu97bd55ljkpucvq2jlt74fklsrhg",
+                    PrefsManager.getUserInformation(applicationContext).data.stu_id,
+                    month).enqueue(object: retrofit2.Callback<AttendanceResponse> {
+
+                    override fun onResponse(call: Call<AttendanceResponse?>, response: Response<AttendanceResponse?>) {
+                        binding.progressBar.visibility = View.GONE
+                        binding.attendanceRecyclerView.visibility = View.VISIBLE
+                        if (response.isSuccessful && response.body() != null) {
+                            val s = response.body()
+                            val gson = Gson()
+                            if (s?.status == 1 && s.data.isNotEmpty()) {
+                                Log.d("herexx", "here1")
+                                Log.d("attendanceTAG", "${PrefsManager.getUserInformation(applicationContext).data.stu_id}")
+                                setDataToAdapter(s)
+
+                            } else {
+                                binding.llNoDataFound.visibility = View.VISIBLE
+                                binding.attendanceRecyclerView.visibility = View.GONE
+                                Log.d("herexx", "here2")
+                            }
+                        } else {
+                            // will only be here, if either student_id or month is entered wrong, which never gonna occur
+                        }
+                    }
+
+                    override fun onFailure(call: Call<AttendanceResponse?>, t: Throwable) {
+                        binding.progressBar.visibility = View.GONE
+                        binding.attendanceRecyclerView.visibility = View.GONE
+                        binding.llInternalServerError.visibility = View.VISIBLE
+                        Log.d("attendanceTAG", "${t.message}")
+                        Log.d("herexx", "here3")
+                    }
+
+                })
+            } catch (e: Exception) {
+                Toast.makeText(this@AttendanceRegisterActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                Log.d("herexx", "here4")
             }
-        } else {
-            // Add some dummy data for other months
-            records.add(AttendanceRecord("01 $selectedMonth 2023", "Present"))
-            records.add(AttendanceRecord("02 $selectedMonth 2023", "Present"))
-            records.add(AttendanceRecord("03 $selectedMonth 2023", "Present"))
-            records.add(AttendanceRecord("04 $selectedMonth 2023", "Present"))
-            records.add(AttendanceRecord("05 $selectedMonth 2023", "Present"))
-            records.add(AttendanceRecord("06 $selectedMonth 2023", "Present"))
-            records.add(AttendanceRecord("07 $selectedMonth 2023", "Present"))
-            records.add(AttendanceRecord("08 $selectedMonth 2023", "Present"))
-            records.add(AttendanceRecord("09 $selectedMonth 2023", "Present"))
-            records.add(AttendanceRecord("10 $selectedMonth 2023", "Present"))
-            records.add(AttendanceRecord("11 $selectedMonth 2023", "Present"))
-            records.add(AttendanceRecord("12 $selectedMonth 2023", "Present"))
-            records.add(AttendanceRecord("13 $selectedMonth 2023", "Absent"))
-            records.add(AttendanceRecord("14 $selectedMonth 2023", "Present"))
-            records.add(AttendanceRecord("15 $selectedMonth 2023", "Present"))
-            records.add(AttendanceRecord("16 $selectedMonth 2023", "Absent"))
-            records.add(AttendanceRecord("17 $selectedMonth 2023", "Present"))
-            records.add(AttendanceRecord("18 $selectedMonth 2023", "Present"))
-            records.add(AttendanceRecord("19 $selectedMonth 2023", "Present"))
-            records.add(AttendanceRecord("20 $selectedMonth 2023", "Absent"))
-            records.add(AttendanceRecord("21 $selectedMonth 2023", "Present"))
-            records.add(AttendanceRecord("22 $selectedMonth 2023", "Present"))
-            records.add(AttendanceRecord("23 $selectedMonth 2023", "Absent"))
-            records.add(AttendanceRecord("24 $selectedMonth 2023", "Present"))
-            records.add(AttendanceRecord("25 $selectedMonth 2023", "Present"))
-            records.add(AttendanceRecord("26 $selectedMonth 2023", "Absent"))
-            records.add(AttendanceRecord("27 $selectedMonth 2023", "Absent"))
-            records.add(AttendanceRecord("28 $selectedMonth 2023", "Present"))
-            records.add(AttendanceRecord("29 $selectedMonth 2023", "Present"))
-            records.add(AttendanceRecord("30 $selectedMonth 2023", "Present"))
         }
+
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        NetworkChangeReceiver.registerReceiver(this, networkChangeReceiver)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        NetworkChangeReceiver.unregisterReceiver(this, networkChangeReceiver)
+    }
+
+    private fun setDataToAdapter(s: AttendanceResponse) {
+        val records = mutableListOf<AttendanceRecordModel>()
+
+
+            for (i in 0 until s.data.size) {
+                records.add(AttendanceRecordModel(s.data[i].date, s.data[i].attendance))
+            }
 
         attendanceAdapter.setAttendanceRecords(records)
+
+
+        }
+
     }
 
-    data class AttendanceRecord(val date: String, val status: String)
 
-    private inner class AttendanceAdapter : RecyclerView.Adapter<AttendanceAdapter.ViewHolder>() {
-        private var attendanceRecords = listOf<AttendanceRecord>()
-
-        fun setAttendanceRecords(records: List<AttendanceRecord>) {
-            this.attendanceRecords = records
-            notifyDataSetChanged()
-        }
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-            val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_attendance, parent, false)
-            return ViewHolder(view)
-        }
-
-        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            val record = attendanceRecords[position]
-            holder.tvDate.text = record.date
-            holder.tvStatus.text = record.status
-
-            if (record.status == "Present") {
-                holder.tvStatus.setBackgroundResource(R.drawable.status_present_background)
-            } else {
-                holder.tvStatus.setBackgroundResource(R.drawable.status_absent_background)
-            }
-        }
-
-        override fun getItemCount() = attendanceRecords.size
-
-        inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            val tvDate: TextView = itemView.findViewById(R.id.tvDate)
-            val tvStatus: TextView = itemView.findViewById(R.id.tvStatus)
-        }
-    }
-}

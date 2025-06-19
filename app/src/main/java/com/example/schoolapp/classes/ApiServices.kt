@@ -2,15 +2,22 @@ package com.example.schoolapp.classes
 
 
 import com.example.schoolapp.requests.PaymentHistoryRequest
+import com.example.schoolapp.responses.AcademicPlanResponse
+import com.example.schoolapp.responses.AttendanceResponse
 import com.example.schoolapp.responses.FeeInstallmentDetailResponse
 import com.example.schoolapp.responses.FeeInstallmentsResponse
 import com.example.schoolapp.responses.GetExamDetailResponse
 import com.example.schoolapp.responses.GetMarksResponse
+import com.example.schoolapp.responses.GetStudentLeaveRequestResponse
+import com.example.schoolapp.responses.HomeworkResponse
 import com.example.schoolapp.responses.LoginResponse
 import com.example.schoolapp.responses.NoticeDetailResponse
 import com.example.schoolapp.responses.PaymentHistoryResponse
 import com.example.schoolapp.responses.StudentDetailResponse
+import com.example.schoolapp.responses.SubjectNotesResponse
+import com.example.schoolapp.responses.SubmitLeaveRequestResponse
 import com.example.schoolapp.responses.TimeTableResponse
+import okhttp3.Cookie
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Body
@@ -121,5 +128,91 @@ class ApiServices {
             @Body paymentHistoryModel: PaymentHistoryRequest
         ): Call<PaymentHistoryResponse>
     }
+
+    interface AttendanceApiService {
+        @FormUrlEncoded
+        @POST("API/get_attendance_by_student")
+        fun getStudentAttendance(
+            @Header("Authorization") authorization: String,
+            @Header("Content-Type") contentType: String,
+            @Header("Cookie") cookie: String,
+            @Field("student_id") studentId: String,
+            @Field("month") month: String
+        ): Call<AttendanceResponse>
+    }
+
+    interface HomeworkApiService {
+        @FormUrlEncoded
+        @POST("API/getHomework")
+        fun getHomework(
+            @Header("Authorization") authorization: String,
+            @Header("Content-Type") contentType: String,
+            @Header("Cookie") cookie: String,
+            @Field("section_id") sectionId: String
+        ): Call<HomeworkResponse>
+    }
+
+    // original submit leave request API.......
+
+//    interface SubmitLeaveRequestApiService {
+//        @FormUrlEncoded
+//        @POST("API/submitStudentLeaveRequest")
+//        fun submitLeaveRequest(
+//            @Header("Content-Type") contentType: String,
+//            @Header("Cookie") cookie: String,
+//            @Field("student_id") studentId: String,
+//            @Field("LType") leaveType: String,
+//            @Field("FDate") startDate: String,
+//            @Field("TDate") endDate: String,
+//            @Field("Reason") leaveReason: String
+//        ): Call<SubmitLeaveRequestResponse>
+//    }
+
+    // new submit leave request API.............
+
+    interface SubmitLeaveRequestApiService {
+        @FormUrlEncoded
+        @POST("API/submitStudentLeaveRequest")
+        fun submitLeaveRequest(
+            @Header("Content-Type") contentType: String,
+            @Header("Cookie") cookie: String,
+            @Field("student_id") studentId: String,
+            @Field("LType") leaveType: String,
+            @Field("FDate") startDate: String,
+            @Field("TDate") endDate: String,
+            @Field("Reason") leaveReason: String
+        ): Call<SubmitLeaveRequestResponse>
+    }
+
+    interface GetStudentLeaveRequestApiService {
+        @FormUrlEncoded
+        @POST("API/getStudentLeaveRequest")
+        fun getStudentLeaveRequests(
+            @Header("Content-Type") contentType: String,
+            @Header("Cookie") cookie: String,
+            @Field("student_id") studentId: String
+        ): Call<GetStudentLeaveRequestResponse>
+    }
+
+    interface SubjectNotesApiService {
+        @FormUrlEncoded
+        @POST("API/getSubjectNotes")
+        fun getSubjectNotes(
+            @Header("Authorization") authorization: String,
+            @Header("Content-Type") contentType: String,
+            @Header("Cookie") cookie: String,
+            @Field("section_id") sectionId: String
+        ): Call<SubjectNotesResponse>
+    }
+
+    interface AcademicPlanApiService {
+        @POST("API/getAcademicPlan")
+        fun getAcademicPlan(
+            @Header("Authorization") authorization: String,
+            @Header("Content-Type") contentType: String,
+            @Header("Cookie") cookie: String
+        ): Call<AcademicPlanResponse>
+    }
+
 
 }

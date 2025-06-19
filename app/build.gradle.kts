@@ -62,5 +62,9 @@ dependencies {
     implementation ("androidx.fragment:fragment-ktx:1.8.6")
 
 
+    implementation("commons-io:commons-io:2.11.0")
+    implementation ("androidx.dynamicanimation:dynamicanimation:1.0.0")
+
+
 
 }

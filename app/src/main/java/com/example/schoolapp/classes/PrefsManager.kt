@@ -6,6 +6,7 @@ import com.example.schoolapp.responses.LoginResponse
 import com.google.gson.Gson
 import kotlin.math.log
 import androidx.core.content.edit
+import com.example.schoolapp.responses.StudentDetailResponse
 
 class PrefsManager(private val context: Context) {
     private val sharedPreferences: SharedPreferences
@@ -46,6 +47,22 @@ class PrefsManager(private val context: Context) {
             val jsonFromPrefs = sharedPreferences.getString("userInformation", null)
             val userInformationObject = gson.fromJson(jsonFromPrefs, LoginResponse::class.java)
             return userInformationObject
+        }
+
+        fun setUserDetailedInformation(context: Context, studentDetailResponse: StudentDetailResponse) {
+            val gson = Gson()
+            val userDetailedInformationString = gson.toJson(studentDetailResponse)
+            context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE).edit {
+                putString("userDetailedInformation", userDetailedInformationString)
+            }
+        }
+
+        fun getUserDetailedInformation(context: Context): StudentDetailResponse {
+            val sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+            val gson = Gson()
+            val jsonFromPrefs = sharedPreferences.getString("userDetailedInformation", null)
+            val userDetailedInformationObject = gson.fromJson(jsonFromPrefs, StudentDetailResponse::class.java)
+            return userDetailedInformationObject
         }
 
         fun setSectionId(context: Context, sectionId: String) {
