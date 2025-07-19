@@ -1,5 +1,6 @@
 package com.example.schoolapp.fragments
 
+import android.annotation.SuppressLint
 import android.content.res.Resources
 import android.graphics.Typeface
 import android.os.Bundle
@@ -7,9 +8,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.JsResult
+import android.webkit.WebChromeClient
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -38,6 +45,7 @@ class PayFeesFragment : Fragment() {
     private var selectedId: String = "-1"
     private var feeItemList = mutableListOf<FeeItem>()
 
+    @SuppressLint("SetJavaScriptEnabled")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -46,20 +54,72 @@ class PayFeesFragment : Fragment() {
         binding = FragmentPayFeesBinding.inflate(inflater, container, false)
 
 
-        initialisers()
-        setFeeInstallmentInformation()
-        listeners()
+        initialisers() // setting up the webview..... below logic is needed no more !!!
+//        setFeeInstallmentInformation()
+//        listeners()
 
         return binding.root
     }
 
     private fun initialisers() {
 
+        val stuId = PrefsManager.getUserDetailedInformation(requireContext()).studentData[0].studentId
+        val url = "https://erp.apschitrakoot.in/Studentweb/FeeSubmitNew/$stuId"
+
+        binding.webViewPayFee.settings.javaScriptEnabled = true
+
+        // Ensure all navigation happens inside the WebView
+        binding.webViewPayFee.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+                url?.let { view?.loadUrl(it) }
+                return true
+            }
+        }
+
+        // Handle JS alerts and confirms
+        binding.webViewPayFee.webChromeClient = object : WebChromeClient() {
+            override fun onJsAlert(view: WebView?, url: String?, message: String?, result: JsResult?): Boolean {
+                AlertDialog.Builder(requireContext())
+                    .setTitle("Alert")
+                    .setMessage(message)
+                    .setPositiveButton("OK") { _, _ -> result?.confirm() }
+                    .setCancelable(false)
+                    .create()
+                    .show()
+                return true
+            }
+
+            override fun onJsConfirm(view: WebView?, url: String?, message: String?, result: JsResult?): Boolean {
+                AlertDialog.Builder(requireContext())
+                    .setTitle("Confirm")
+                    .setMessage(message)
+                    .setPositiveButton("OK") { _, _ -> result?.confirm() }
+                    .setNegativeButton("Cancel") { _, _ -> result?.cancel() }
+                    .create()
+                    .show()
+                return true
+            }
+        }
+
+        binding.webViewPayFee.loadUrl(url)
+
+        // Back button handling
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (binding.webViewPayFee.canGoBack()) {
+                    binding.webViewPayFee.goBack()
+                } else {
+                    requireActivity().finish()
+                }
+            }
+        })
     }
+
+
 
     private fun setFeeInstallmentInformation() {
         feeInstallmentViewModel.feeInstallmentData.observe(viewLifecycleOwner) { feeData ->
-            binding.radioAprilJune.text = feeData.data[0].monthname
+//            binding.radioAprilJune.text = feeData.data[0].monthname
             binding.radioJulySeptember.text = feeData.data[1].monthname
             binding.radioOctoberDecember.text = feeData.data[2].monthname
             binding.radioJanuaryMarch.text = feeData.data[3].monthname

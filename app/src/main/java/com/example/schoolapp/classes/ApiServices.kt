@@ -2,6 +2,7 @@ package com.example.schoolapp.classes
 
 
 import com.example.schoolapp.requests.PaymentHistoryRequest
+import com.example.schoolapp.requests.UpdateFcmTokenRequest
 import com.example.schoolapp.responses.AcademicPlanResponse
 import com.example.schoolapp.responses.AttendanceResponse
 import com.example.schoolapp.responses.FeeInstallmentDetailResponse
@@ -17,6 +18,7 @@ import com.example.schoolapp.responses.StudentDetailResponse
 import com.example.schoolapp.responses.SubjectNotesResponse
 import com.example.schoolapp.responses.SubmitLeaveRequestResponse
 import com.example.schoolapp.responses.TimeTableResponse
+import com.example.schoolapp.responses.UpdateFcmTokenResponse
 import okhttp3.Cookie
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -25,6 +27,7 @@ import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Streaming
 
@@ -212,6 +215,15 @@ class ApiServices {
             @Header("Content-Type") contentType: String,
             @Header("Cookie") cookie: String
         ): Call<AcademicPlanResponse>
+    }
+
+    interface UpdateFCMTokenApiService {
+        @PUT("API/updateFcmToken")
+        fun updateFcmToken(
+            @Header("Content-Type") contentType: String,
+            @Header("Cookie") cookie: String,
+            @Body updateFcmTokenRequest: UpdateFcmTokenRequest
+        ) : Call<UpdateFcmTokenResponse>
     }
 
 

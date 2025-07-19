@@ -32,7 +32,7 @@ class AdditionalInfoFragment : Fragment() {
     private fun setPersonalInformation() {
         studentDetailViewModel.studentData.observe(viewLifecycleOwner) { student ->
             binding.tvClassAndSection.text = "Class ${student.studentData[0].standard} - Section ${student.studentData[0].sectionName.get(student.studentData[0].sectionName.length - 1)}"
-            binding.tvRollNumber.text = student.studentData[0].rollNumber
+            binding.tvRollNumber.text = student.studentData[0].enrollment
             binding.tvAcademicYear.text = student.studentData[0].academicYear
             binding.tvParentName.text = "Mother: ${student.studentData[0].motherName}, Father: ${student.studentData[0].fatherName}"
             binding.tvParentPhone.text = student.studentData[0].fatherMobile

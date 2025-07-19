@@ -171,7 +171,8 @@ class AttendanceRegisterActivity : AppCompatActivity() {
                     "Bearer TOKEN_REQUIRED......",
                     "application/x-www-form-urlencoded",
                     "ci_session=2t8pu97bd55ljkpucvq2jlt74fklsrhg",
-                    PrefsManager.getUserInformation(applicationContext).data.stu_id,
+//                    PrefsManager.getUserInformation(applicationContext).data.stu_id,
+                    "1",
                     month).enqueue(object: retrofit2.Callback<AttendanceResponse> {
 
                     override fun onResponse(call: Call<AttendanceResponse?>, response: Response<AttendanceResponse?>) {

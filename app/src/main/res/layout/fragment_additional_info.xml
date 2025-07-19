@@ -88,7 +88,7 @@
 
                                 <TextView
                                     style="@style/OptionTitle"
-                                    android:text="Roll Number" />
+                                    android:text="Enrollment Number" />
 
                                 <TextView
                                     android:id="@+id/tvRollNumber"

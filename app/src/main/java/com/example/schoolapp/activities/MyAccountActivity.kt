@@ -1,14 +1,18 @@
 package com.example.schoolapp.activities
 
+import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.edit
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.schoolapp.MainActivity
 import com.example.schoolapp.R
+import com.example.schoolapp.classes.PrefsManager
 import com.example.schoolapp.databinding.ActivityMyAccountBinding
 
 class MyAccountActivity : AppCompatActivity() {
@@ -35,6 +39,9 @@ class MyAccountActivity : AppCompatActivity() {
 
     private fun initialisers() {
 
+        binding.tvStudentName.text = PrefsManager.getUserDetailedInformation(this).studentData.get(0).name
+        binding.tvClassAndSection.text = "Class: " + PrefsManager.getUserDetailedInformation(this).studentData.get(0).sectionName
+        binding.tvRollNumber.text = "Enrollment No: " + PrefsManager.getUserDetailedInformation(this).studentData.get(0).enrollment
     }
 
     private fun listeners() {
@@ -62,6 +69,7 @@ class MyAccountActivity : AppCompatActivity() {
         binding.cvLogout.setOnClickListener {
             startActivity(Intent(this@MyAccountActivity, LoginActivity::class.java))
             finishAffinity()
+            getSharedPreferences(PrefsManager.PREF_NAME, Context.MODE_PRIVATE).edit() { clear() }
         }
 
     }

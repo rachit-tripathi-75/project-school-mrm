@@ -26,21 +26,21 @@ class ApplicationClass : Application() {
 
         }
 
-        val executorService = Executors.newSingleThreadExecutor()
-        executorService.execute(Runnable {
-            try {
-                val token: String? = FcmAuthToken.getAccessToken(this)
-                Log.d("Oauth2TokenTAG", "Oauth2.0 Token: " + token)
-            } catch (e: Exception) {
-                throw RuntimeException(e)
-            }
-        })
+//        val executorService = Executors.newSingleThreadExecutor()
+//        executorService.execute(Runnable {
+//            try {
+//                val token: String? = FcmAuthToken.getAccessToken(this)
+//                Log.d("Oauth2TokenTAG", "Oauth2.0 Token: " + token)
+//            } catch (e: Exception) {
+//                throw RuntimeException(e)
+//            }
+//        })
 
-        FirebaseMessaging.getInstance().token.addOnSuccessListener { token ->
-            Log.d("fcmTokenTAG", "FCM Token: " + token)
-        }.addOnFailureListener { e->
-            Log.d("fcmTokenTAG", "Error: " + e.message)
-        }
+//        FirebaseMessaging.getInstance().token.addOnSuccessListener { token ->
+//            Log.d("fcmTokenTAG", "FCM Token: " + token)
+//        }.addOnFailureListener { e->
+//            Log.d("fcmTokenTAG", "Error: " + e.message)
+//        }
 
 
     }

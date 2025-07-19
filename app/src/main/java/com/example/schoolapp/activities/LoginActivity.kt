@@ -19,8 +19,11 @@ import com.example.schoolapp.classes.ApiClient
 import com.example.schoolapp.classes.ApiServices
 import com.example.schoolapp.classes.PrefsManager
 import com.example.schoolapp.databinding.ActivityLoginBinding
+import com.example.schoolapp.requests.UpdateFcmTokenRequest
 import com.example.schoolapp.responses.LoginResponse
 import com.example.schoolapp.responses.StudentDetailResponse
+import com.example.schoolapp.responses.UpdateFcmTokenResponse
+import com.google.firebase.messaging.FirebaseMessaging
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -93,6 +96,7 @@ class LoginActivity : AppCompatActivity() {
                         PrefsManager.setUserInformation(this@LoginActivity, loginData)
                         PrefsManager.setSession(this@LoginActivity, true)
                         startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                        storeFCMTokenToServer()
                         finish()
                     }
 
@@ -109,6 +113,31 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this@LoginActivity, "An error has occurred. Please try again later", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    private fun storeFCMTokenToServer() {
+
+        FirebaseMessaging.getInstance().token.addOnSuccessListener { token ->
+            val s = UpdateFcmTokenRequest(binding.etEnrollmentNumber.text.toString(), token)
+            ApiClient.updateFcmTokenInstance.updateFcmToken(
+                "application/json",
+                "ci_session=iud5psvipvp7npbc74oi9thgkbaoq0m0",
+                s
+            ).enqueue(object : retrofit2.Callback<UpdateFcmTokenResponse> {
+                override fun onResponse(call: Call<UpdateFcmTokenResponse>, response: retrofit2.Response<UpdateFcmTokenResponse>) {
+                    if (response.isSuccessful) {
+                        Log.d("storeFCMTokenToServerTAG", response.body()?.Msg!!)
+                    }
+                }
+
+                override fun onFailure(call: Call<UpdateFcmTokenResponse>, t: Throwable) {
+                    Log.d("storeFCMTokenToServerTAG", "onFailure: " + t.message)
+                }
+            })
+        }
+
+
+
     }
 
     private fun fetchStudentInformation() {

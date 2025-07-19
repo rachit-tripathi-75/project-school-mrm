@@ -5,8 +5,13 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.schoolapp.ApplicationClass
 import com.example.schoolapp.R
+import com.example.schoolapp.classes.ApiClient
+import com.example.schoolapp.classes.PrefsManager
+import com.example.schoolapp.requests.UpdateFcmTokenRequest
+import com.example.schoolapp.responses.UpdateFcmTokenResponse
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import retrofit2.Call
 
 class MyFirebaseNotificationService : FirebaseMessagingService() {
 
@@ -50,6 +55,28 @@ class MyFirebaseNotificationService : FirebaseMessagingService() {
     override fun onNewToken(token: String) {
         super.onNewToken(token)
         // api to store the generated token in the server.......
+
+        val s = UpdateFcmTokenRequest(PrefsManager.getUserDetailedInformation(this).studentData.get(0).enrollment, token)
+        ApiClient.updateFcmTokenInstance.updateFcmToken(
+            "application/json",
+            "ci_session=iud5psvipvp7npbc74oi9thgkbaoq0m0",
+            s
+        ).enqueue(object : retrofit2.Callback<UpdateFcmTokenResponse> {
+            override fun onResponse(
+                call: Call<UpdateFcmTokenResponse>,
+                response: retrofit2.Response<UpdateFcmTokenResponse>
+            ) {
+                if (response.isSuccessful) {
+                    Log.d("onNewTokenTAG", response.body()?.Msg!!)
+                }
+            }
+
+            override fun onFailure(call: Call<UpdateFcmTokenResponse>, t: Throwable) {
+                Log.d("onNewTokenTAG", "onFailure: " + t.message)
+            }
+        })
+
+
     }
 
 }

@@ -102,7 +102,7 @@
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
-                    <!-- RecyclerView (Scrollable) -->
+
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/timetableRecyclerView"
                         android:layout_width="wrap_content"

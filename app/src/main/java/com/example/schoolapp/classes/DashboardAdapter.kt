@@ -74,37 +74,37 @@ class DashboardAdapter(val context: Context, private val items: List<DashboardIt
                 1 -> {
                     context.startActivity(Intent(context, AttendanceRegisterActivity::class.java))
                 }
+//                2 -> {
+//                    context.startActivity(Intent(context, MyTimeTableActivity::class.java))
+//                }
                 2 -> {
-                    context.startActivity(Intent(context, MyTimeTableActivity::class.java))
-                }
-                3 -> {
                     context.startActivity(Intent(context, ReportCardActivity::class.java))
                 }
-                4 -> {
+                3 -> {
                     context.startActivity(Intent(context, FeeDepositActivity::class.java))
                 }
-                5 -> {
+                4 -> {
                     context.startActivity(Intent(context, SubjectNotesActivity::class.java))
                 }
-                6 -> {
+                5 -> {
                     context.startActivity(Intent(context, AcademicCalendarActivity::class.java))
                 }
-                7 -> {
+                6 -> {
                     context.startActivity(Intent(context, LeaveRequestActivity::class.java))
                 }
-                8 -> {
+                7 -> {
                     context.startActivity(Intent(context, HomeWorkActivity::class.java))
                 }
-                9 -> {
+                8 -> {
                     context.startActivity(Intent(context, PtaMeetingActivity::class.java))
                 }
-                10 -> {
+                9 -> {
                     context.startActivity(Intent(context, GrievanceActivity::class.java))
                 }
-                11 -> {
+                10 -> {
                     context.startActivity(Intent(context, ExtraCurricularActivity::class.java))
                 }
-                12 -> {
+                11 -> {
                     context.startActivity(Intent(context, StudentCommentActivity::class.java))
                 }
             }

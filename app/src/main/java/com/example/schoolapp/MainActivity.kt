@@ -254,7 +254,7 @@ class MainActivity : AppCompatActivity() {
         return listOf(
             DashboardItem(R.drawable.ic_notice_board, "Notice Board"),
             DashboardItem(R.drawable.ic_attendance, "Attendance Register"),
-            DashboardItem(R.drawable.ic_timetable, "My Timetable"),
+//            DashboardItem(R.drawable.ic_timetable, "My Timetable"),
             DashboardItem(R.drawable.ic_report_card, "My Exam Marks"),
             DashboardItem(R.drawable.moneyrupee, "Fee Deposit"),
             DashboardItem(R.drawable.ic_subject_notes, "Subject Notes"),

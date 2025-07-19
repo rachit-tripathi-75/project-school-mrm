@@ -25,9 +25,13 @@ class AttendanceAdapter : RecyclerView.Adapter<AttendanceAdapter.ViewHolder>() {
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val record = attendanceRecords[position]
         holder.tvDate.text = record.date
-        holder.tvStatus.text = record.status
+        if (record.status.equals("0")) {
+            holder.tvStatus.text = "Present"
+        } else {
+            holder.tvStatus.text = "Absent"
+        }
 
-        if (record.status == "1") {
+        if (record.status == "0") {
             holder.tvStatus.setBackgroundResource(R.drawable.status_present_background)
         } else {
             holder.tvStatus.setBackgroundResource(R.drawable.status_absent_background)

@@ -138,4 +138,12 @@ object ApiClient {
             .create(ApiServices.AcademicPlanApiService::class.java)
     }
 
+    val updateFcmTokenInstance: ApiServices.UpdateFCMTokenApiService by lazy {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ApiServices.UpdateFCMTokenApiService::class.java)
+    }
+
 }
