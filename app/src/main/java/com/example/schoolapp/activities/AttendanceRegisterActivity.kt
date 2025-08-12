@@ -163,15 +163,16 @@ class AttendanceRegisterActivity : AppCompatActivity() {
         binding.llNoDataFound.visibility = View.GONE
         binding.llInternalServerError.visibility = View.GONE
         Log.d("monthxxx", month)
+        Log.d("studentIdxxx", PrefsManager.getUserInformation(applicationContext).data.stu_id);
 
         lifecycleScope.launch {
             try {
                 delay(1500)
                 ApiClient.attendanceInstance.getStudentAttendance(
-                    "Bearer TOKEN_REQUIRED......",
+                    "Bearer YOUR_TOKEN",
                     "application/x-www-form-urlencoded",
                     "ci_session=2t8pu97bd55ljkpucvq2jlt74fklsrhg",
-                    PrefsManager.getUserInformation(applicationContext).data.stu_id,
+                    PrefsManager.getUserDetailedInformation(applicationContext).studentData.get(0).sidInc,
                     month).enqueue(object: retrofit2.Callback<AttendanceResponse> {
 
                     override fun onResponse(call: Call<AttendanceResponse?>, response: Response<AttendanceResponse?>) {

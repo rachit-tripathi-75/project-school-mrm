@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.schoolapp.R
 import com.example.schoolapp.adapters.SubjectAdapter
 import com.example.schoolapp.classes.ApiClient
+import com.example.schoolapp.classes.PrefsManager
 import com.example.schoolapp.databinding.ActivityReportCardBinding
 import com.example.schoolapp.networks.NetworkChangeReceiver
 import com.example.schoolapp.responses.GetExamDetailResponse
@@ -42,7 +43,8 @@ class ReportCardActivity : AppCompatActivity() {
     private var exams: List<Exam> = mutableListOf<Exam>()
 
 
-    var networkChangeReceiver: NetworkChangeReceiver = NetworkChangeReceiver(object : NetworkChangeReceiver.NetworkStatusListener {
+    var networkChangeReceiver: NetworkChangeReceiver =
+        NetworkChangeReceiver(object : NetworkChangeReceiver.NetworkStatusListener {
             override fun onNetworkConnected() {
                 binding.llNoInternetFound.visibility = View.GONE
                 binding.nestedScrollView.visibility = View.VISIBLE
@@ -82,28 +84,49 @@ class ReportCardActivity : AppCompatActivity() {
     }
 
 
-
     private fun setupExamSpinner() {
 
-        ApiClient.getExamDetailInstance.getExamDetail("Bearer 8a56598bd5114ab31f6f70e76e1873e8945eafcd915b3f6ada4c0132d212a57e",
-            "ci_session=5b6qicv26lfo48kmvgnfpmqgllo5c579").enqueue(object: retrofit2.Callback<GetExamDetailResponse> {
+        ApiClient.getExamDetailInstance.getExamDetail(
+            "Bearer 8a56598bd5114ab31f6f70e76e1873e8945eafcd915b3f6ada4c0132d212a57e",
+            "ci_session=5b6qicv26lfo48kmvgnfpmqgllo5c579"
+        ).enqueue(object : retrofit2.Callback<GetExamDetailResponse> {
 
-            override fun onResponse(call: Call<GetExamDetailResponse>, response: Response<GetExamDetailResponse>) {
+            override fun onResponse(
+                call: Call<GetExamDetailResponse>,
+                response: Response<GetExamDetailResponse>
+            ) {
                 if (response.isSuccessful) {
                     val s: GetExamDetailResponse? = response.body()
                     exams = mutableListOf<Exam>()
                     s?.data?.forEach { examData ->
-                        (exams as MutableList<Exam>).add(Exam(examData.id, examData.name, examData.max_mark))
+                        (exams as MutableList<Exam>).add(
+                            Exam(
+                                examData.id,
+                                examData.name,
+                                examData.max_mark
+                            )
+                        )
                     }
 
                     val examNames = exams.map { it.name }
-                    val adapter = ArrayAdapter(this@ReportCardActivity, android.R.layout.simple_spinner_dropdown_item, examNames)
+
+                    val adapter = ArrayAdapter(
+                        this@ReportCardActivity,
+                        android.R.layout.simple_spinner_dropdown_item,
+                        examNames
+                    )
                     (binding.spinnerExam as? AutoCompleteTextView)?.setAdapter(adapter)
 
-                    Log.d("examdetailresponseTAG", "Status: ${s?.status} + dataSize: ${s?.data?.size}")
+                    Log.d(
+                        "examdetailresponseTAG",
+                        "Status: ${s?.status} + dataSize: ${s?.data?.size}"
+                    )
                 } else {
                     val examDetail: GetExamDetailResponse? = response.body()
-                    Log.d("examdetailresponseTAG", "Status: ${examDetail?.status} + dataSize: ${examDetail?.data!!.size}")
+                    Log.d(
+                        "examdetailresponseTAG",
+                        "Status: ${examDetail?.status} + dataSize: ${examDetail?.data!!.size}"
+                    )
                 }
             }
 
@@ -133,19 +156,27 @@ class ReportCardActivity : AppCompatActivity() {
             onBackPressed()
         }
         binding.btnSearch.setOnClickListener {
-            val selectedExamPosition = exams.indexOfFirst {
-                it.name == (binding.spinnerExam as? AutoCompleteTextView)?.text.toString()
+            val selectedExamName = (binding.spinnerExam as? AutoCompleteTextView)?.text.toString()
+
+            // Find the selected Exam object from your list
+            val selectedExam = exams.firstOrNull { it.name == selectedExamName }
+
+            // Check if a valid exam was selected
+            if (selectedExam == null) {
+                Snackbar.make(
+                    binding.root,
+                    "Please select a valid exam from the list.",
+                    Snackbar.LENGTH_LONG
+                ).show()
+                return@setOnClickListener
             }
 
+            // Update the max marks for the selected exam
+            // Using toIntOrNull provides safety against malformed numbers
+            maxMarksToSent = selectedExam.maxMarks.toIntOrNull() ?: 100
 
-//            if (selectedExamPosition == -1 || scholarId.isEmpty()) {
-//                showError("Please select an exam and enter scholar ID")
-//                return@setOnClickListener
-//            }
-
-
-//            fetchStudentMarks(selectedExamPosition, scholarId)
-            fetchStudentMarks()
+            // Call fetchStudentMarks with the correct, dynamic ID
+            fetchStudentMarks(selectedExam.id)
         }
     }
 
@@ -159,7 +190,7 @@ class ReportCardActivity : AppCompatActivity() {
         binding.textError.visibility = View.VISIBLE
     }
 
-    private fun fetchStudentMarks() {
+    private fun fetchStudentMarks(examId: String) {
         // Hide error if visible
         binding.textError.visibility = View.GONE
 
@@ -168,56 +199,62 @@ class ReportCardActivity : AppCompatActivity() {
         binding.containerResult.visibility = View.GONE
         binding.llNoDataFound.visibility = View.GONE
 
-//         Simulate API call
         CoroutineScope(Dispatchers.IO).launch {
             try {
-
                 // Simulate network delay
                 delay(1500)
-                ApiClient.getMarksInstance.getMarks("Bearer 8a56598bd5114ab31f6f70e76e1873e8945eafcd915b3f6ada4c0132d212a57e",
-                    "ci_session=5b6qicv26lfo48kmvgnfpmqgllo5c579",
-                    "1675",
-                    getExamId(binding.spinnerExam.text.toString())).enqueue(object: retrofit2.Callback<GetMarksResponse> {
 
+                val userDetails = PrefsManager.getUserDetailedInformation(applicationContext)
+                val scholarId = userDetails.studentData.get(0).enrollment
 
-                    override fun onResponse(call: Call<GetMarksResponse>, response: Response<GetMarksResponse>) {
-                        if (response.isSuccessful && response.body() != null) {
-                            val s: GetMarksResponse? = response.body()
-                            binding.containerLoading.visibility = View.GONE
-                            if (s?.data!!.size != 0) {
-                                displayResult(s.data)
-                                setupSubjectRecyclerView(s.data)
+                // Use the examId passed into this function
+                ApiClient.getMarksInstance.getMarks(
+                    "Bearer ...",
+                    "ci_session=...",
+                    scholarId,
+                    examId
+                ) // <-- Use the dynamic examId here!
+                    .enqueue(object : retrofit2.Callback<GetMarksResponse> {
+
+                        override fun onResponse(
+                            call: Call<GetMarksResponse>,
+                            response: Response<GetMarksResponse>
+                        ) {
+                            // Your existing onResponse logic remains the same
+                            if (response.isSuccessful && response.body() != null) {
+                                val s: GetMarksResponse? = response.body()
                                 binding.containerLoading.visibility = View.GONE
-                                binding.containerResult.visibility = View.VISIBLE
-                                binding.llNoDataFound.visibility = View.GONE
-                                binding.rvSubjectsScore.visibility = View.VISIBLE
-                                binding.llMarks.visibility = View.VISIBLE
-                                Log.d("abcdeTAG", "if case")
+                                if (s?.data!!.size != 0) {
+                                    displayResult(s.data)
+                                    setupSubjectRecyclerView(s.data)
+                                    binding.containerLoading.visibility = View.GONE
+                                    binding.containerResult.visibility = View.VISIBLE
+                                    binding.llNoDataFound.visibility = View.GONE
+                                    binding.rvSubjectsScore.visibility = View.VISIBLE
+                                    binding.llMarks.visibility = View.VISIBLE
+                                } else {
+                                    binding.containerLoading.visibility = View.GONE
+                                    binding.containerResult.visibility = View.VISIBLE
+                                    binding.llNoDataFound.visibility = View.VISIBLE
+                                    binding.rvSubjectsScore.visibility = View.GONE
+                                    binding.llMarks.visibility = View.GONE
+                                    binding.textStudentName.text = ""
+                                    binding.textScholarId.text = ""
+                                    binding.textExamName.text = ""
+                                }
+                                Log.d(
+                                    "marksresponseTAG",
+                                    "Status: ${s?.status} + dataSize: ${s?.data?.size}"
+                                )
                             } else {
-                                binding.containerLoading.visibility = View.GONE
-                                binding.containerResult.visibility = View.VISIBLE
-                                binding.llNoDataFound.visibility = View.VISIBLE
-                                binding.rvSubjectsScore.visibility = View.GONE
-                                binding.llMarks.visibility = View.GONE
-                                binding.textStudentName.text = ""
-                                binding.textScholarId.text = ""
-                                binding.textExamName.text = ""
-                                Log.d("abcdeTAG", "else case")
+                                // Handle unsuccessful response
                             }
-
-                            Log.d("marksresponseTAG", "Status: ${s?.status} + dataSize: ${s?.data?.size}")
-                        } else {
-                            val examDetail: GetMarksResponse? = response.body()
-                            Log.d("marksresponseTAG", "Status: ${examDetail?.status} + dataSize: ${examDetail?.data!!.size}")
                         }
-                    }
 
-                    override fun onFailure(call: Call<GetMarksResponse>, t: Throwable) {
-                        Log.d("marksresponseTAG", "Failure, message: ${t.message}")
-                    }
-
-                })
-
+                        override fun onFailure(call: Call<GetMarksResponse>, t: Throwable) {
+                            Log.d("marksresponseTAG", "Failure, message: ${t.message}")
+                        }
+                    })
 
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
@@ -291,7 +328,7 @@ class ReportCardActivity : AppCompatActivity() {
     private fun calculateObtainedMarks(result: List<StudentMarkData>): String {
         var marks = 0
         for (i in 0 until result.size) {
-            marks+= result[i].mark.toInt()
+            marks += result[i].mark.toInt()
         }
         return marks.toString()
     }
@@ -330,7 +367,6 @@ class ReportCardActivity : AppCompatActivity() {
 
     data class Exam(val id: String, val name: String, val maxMarks: String)
 //    data class StudentResult(val scholarId: String, val studentName: String, val examId: String, val examName: String, val subject: List<SubjectMark>)
-
 
 
 }
