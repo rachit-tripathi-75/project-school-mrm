@@ -60,8 +60,7 @@ dependencies {
     implementation("com.facebook.shimmer:shimmer:0.5.0")
     implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
     implementation ("androidx.fragment:fragment-ktx:1.8.6")
-
-
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
     implementation("commons-io:commons-io:2.11.0")
     implementation ("androidx.dynamicanimation:dynamicanimation:1.0.0")
 

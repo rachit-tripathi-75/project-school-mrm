@@ -21,9 +21,11 @@ import com.example.schoolapp.classes.ApiClient
 import com.example.schoolapp.classes.PrefsManager
 import com.example.schoolapp.databinding.ActivityReportCardBinding
 import com.example.schoolapp.networks.NetworkChangeReceiver
+import com.example.schoolapp.requests.GetMarksRequest
 import com.example.schoolapp.responses.GetExamDetailResponse
 import com.example.schoolapp.responses.GetMarksResponse
-import com.example.schoolapp.responses.StudentMarkData
+import com.example.schoolapp.responses.MarksData
+import com.example.schoolapp.responses.SubjectMark
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -36,10 +38,8 @@ import retrofit2.Response
 class ReportCardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityReportCardBinding
     private lateinit var subjectAdapter: SubjectAdapter
-    private var maxMarks: Int = 100
     private var maxMarksToSent: Int = 100
 
-    // Mock data for demo
     private var exams: List<Exam> = mutableListOf<Exam>()
 
 
@@ -49,7 +49,6 @@ class ReportCardActivity : AppCompatActivity() {
                 binding.llNoInternetFound.visibility = View.GONE
                 binding.nestedScrollView.visibility = View.VISIBLE
                 Log.d("networkInterceptorTAG", "inside onNetworkConnected()")
-
             }
 
             override fun onNetworkDisconnected() {
@@ -137,13 +136,14 @@ class ReportCardActivity : AppCompatActivity() {
         })
     }
 
-    private fun setupSubjectRecyclerView(list: List<StudentMarkData>) {
+    // ✅ Updated signature to accept List<SubjectMark>
+    private fun setupSubjectRecyclerView(list: List<SubjectMark>) {
         if (list.isEmpty()) {
             binding.rvSubjectsScore.visibility = View.GONE
             binding.llMarks.visibility = View.GONE
             binding.llNoDataFound.visibility = View.VISIBLE
         }
-        subjectAdapter = SubjectAdapter(list, this@ReportCardActivity, maxMarksToSent)
+        subjectAdapter = SubjectAdapter(list, this@ReportCardActivity)
         binding.rvSubjectsScore.apply {
             layoutManager = LinearLayoutManager(this@ReportCardActivity)
             adapter = subjectAdapter
@@ -156,12 +156,13 @@ class ReportCardActivity : AppCompatActivity() {
             onBackPressed()
         }
         binding.btnSearch.setOnClickListener {
+            Log.d("btnsearchxxx", PrefsManager.getUserDetailedInformation(applicationContext).studentData.get(0).studentId)
+            Log.d("btnsearchxxx", "sidinc: " + PrefsManager.getUserDetailedInformation(applicationContext).studentData.get(0).sidInc)
             val selectedExamName = (binding.spinnerExam as? AutoCompleteTextView)?.text.toString()
 
-            // Find the selected Exam object from your list
             val selectedExam = exams.firstOrNull { it.name == selectedExamName }
+            Log.d("btnsearchxxx", "selected exam id: " + selectedExam?.id)
 
-            // Check if a valid exam was selected
             if (selectedExam == null) {
                 Snackbar.make(
                     binding.root,
@@ -171,11 +172,8 @@ class ReportCardActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Update the max marks for the selected exam
-            // Using toIntOrNull provides safety against malformed numbers
             maxMarksToSent = selectedExam.maxMarks.toIntOrNull() ?: 100
 
-            // Call fetchStudentMarks with the correct, dynamic ID
             fetchStudentMarks(selectedExam.id)
         }
     }
@@ -191,74 +189,73 @@ class ReportCardActivity : AppCompatActivity() {
     }
 
     private fun fetchStudentMarks(examId: String) {
-        // Hide error if visible
         binding.textError.visibility = View.GONE
-
-        // Show loading
         binding.containerLoading.visibility = View.VISIBLE
         binding.containerResult.visibility = View.GONE
         binding.llNoDataFound.visibility = View.GONE
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                // Simulate network delay
                 delay(1500)
 
                 val userDetails = PrefsManager.getUserDetailedInformation(applicationContext)
-                val scholarId = userDetails.studentData.get(0).enrollment
+                val scholarId = userDetails.studentData.get(0).sidInc
+                val s = GetMarksRequest(scholarId.toInt(), examId.toInt())
 
-                // Use the examId passed into this function
                 ApiClient.getMarksInstance.getMarks(
-                    "Bearer ...",
-                    "ci_session=...",
-                    scholarId,
-                    examId
-                ) // <-- Use the dynamic examId here!
-                    .enqueue(object : retrofit2.Callback<GetMarksResponse> {
+                    "application/json",
+                    "BEARER_TOKEN",
+                    s
+                ).enqueue(object : retrofit2.Callback<GetMarksResponse> {
 
-                        override fun onResponse(
-                            call: Call<GetMarksResponse>,
-                            response: Response<GetMarksResponse>
-                        ) {
-                            // Your existing onResponse logic remains the same
-                            if (response.isSuccessful && response.body() != null) {
-                                val s: GetMarksResponse? = response.body()
+                    override fun onResponse(
+                        call: Call<GetMarksResponse>,
+                        response: Response<GetMarksResponse>
+                    ) {
+                        if (response.isSuccessful && response.body() != null) {
+                            val s: GetMarksResponse? = response.body()
+                            Log.d(
+                                "marksresponseTAG",
+                                "Status: ${s?.status} + dataSize: ${s?.data}"
+                            )
+                            binding.containerLoading.visibility = View.GONE
+
+                            // ✅ Now check the marks list inside the data object
+                            if (s?.data?.marks?.isNotEmpty() == true) {
+                                // ✅ Pass the correct data object to displayResult
+                                displayResult(s.data)
+                                // ✅ Pass the correct marks list to setupSubjectRecyclerView
+                                setupSubjectRecyclerView(s.data.marks)
+
                                 binding.containerLoading.visibility = View.GONE
-                                if (s?.data!!.size != 0) {
-                                    displayResult(s.data)
-                                    setupSubjectRecyclerView(s.data)
-                                    binding.containerLoading.visibility = View.GONE
-                                    binding.containerResult.visibility = View.VISIBLE
-                                    binding.llNoDataFound.visibility = View.GONE
-                                    binding.rvSubjectsScore.visibility = View.VISIBLE
-                                    binding.llMarks.visibility = View.VISIBLE
-                                } else {
-                                    binding.containerLoading.visibility = View.GONE
-                                    binding.containerResult.visibility = View.VISIBLE
-                                    binding.llNoDataFound.visibility = View.VISIBLE
-                                    binding.rvSubjectsScore.visibility = View.GONE
-                                    binding.llMarks.visibility = View.GONE
-                                    binding.textStudentName.text = ""
-                                    binding.textScholarId.text = ""
-                                    binding.textExamName.text = ""
-                                }
-                                Log.d(
-                                    "marksresponseTAG",
-                                    "Status: ${s?.status} + dataSize: ${s?.data?.size}"
-                                )
+                                binding.containerResult.visibility = View.VISIBLE
+                                binding.llNoDataFound.visibility = View.GONE
+                                binding.rvSubjectsScore.visibility = View.VISIBLE
+                                binding.llMarks.visibility = View.VISIBLE
                             } else {
-                                // Handle unsuccessful response
+                                binding.containerLoading.visibility = View.GONE
+                                binding.containerResult.visibility = View.VISIBLE
+                                binding.llNoDataFound.visibility = View.VISIBLE
+                                binding.rvSubjectsScore.visibility = View.GONE
+                                binding.llMarks.visibility = View.GONE
+                                binding.textStudentName.text = ""
+                                binding.textScholarId.text = ""
+                                binding.textExamName.text = ""
                             }
+                        } else {
+                            // Handle unsuccessful response
                         }
+                    }
 
-                        override fun onFailure(call: Call<GetMarksResponse>, t: Throwable) {
-                            Log.d("marksresponseTAG", "Failure, message: ${t.message}")
-                        }
-                    })
+                    override fun onFailure(call: Call<GetMarksResponse>, t: Throwable) {
+                        Log.d("marksresponseTAG", "Failure, message: ${t.message}")
+                    }
+                })
 
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     binding.containerLoading.visibility = View.GONE
+                    Log.d("marksresponseTAG", "Failure, message: ${e.message}")
                     showError("Failed to fetch results. Please try again.")
                 }
             }
@@ -281,57 +278,41 @@ class ReportCardActivity : AppCompatActivity() {
         return "-1"
     }
 
-    private fun displayResult(result: List<StudentMarkData>) {
-        if (result.isEmpty()) {
-            Log.d("reachedTAG", "result is empty")
-            return
-        }
+    // ✅ Updated signature to accept the MarksData object
+    private fun displayResult(result: MarksData) {
         // Hide loading
         binding.containerLoading.visibility = View.GONE
 
-        // Set student infoq
-        binding.textStudentName.text = result[0].StudName
-        binding.textScholarId.text = "Scholar ID: ${result[0].scholar}"
-        binding.textExamName.text = result[0].ExamName
+        // Set student info
+        binding.textStudentName.text = result.studentName
+        binding.textScholarId.text = "Scholar ID: ${result.scholar}"
+        // The exam name is not in the MarksData, so you will need to get it elsewhere
+        // For example, from the selected Exam object
+        // binding.textExamName.text = selectedExamName
 
-        // Set grade with appropriate color
-//        binding.textGrade.text = result.grade
-//        binding.textGrade.setTextColor(getGradeColor(result.))
+        // Set summary using the total marks from the API
+        binding.textMarksObtained.text = result.totalObtainedMarks.toString()
+        binding.textTotalMarks.text = result.totalMaxMarks.toString()
 
+        val obtainedMarks = result.totalObtainedMarks.toFloat()
+        val totalMarks = result.totalMaxMarks.toFloat()
 
-        // Set summary
-        binding.textMarksObtained.text = calculateObtainedMarks(result)
-        binding.textTotalMarks.text = (result.size * maxMarksToSent).toString()
-        val obtainedMarks = calculateObtainedMarks(result).toFloat()
-        val totalMarks = result.size * maxMarksToSent
         val percentage = (obtainedMarks / totalMarks) * 100
 
         Log.d("percentageTAG", percentage.toString())
         binding.textPercentage.text = percentage.toString()
         binding.textPercentage.setTextColor(getGradeColor(percentage))
 
-        // Show result with animation
         binding.containerResult.visibility = View.VISIBLE
         binding.containerResult.startAnimation(
             AnimationUtils.loadAnimation(this, R.anim.slide_up)
         )
 
-//         Animate percentage counters
         animateCounter(0f, percentage, binding.textPercentage)
     }
 
-    private fun String.div(totalMarks: Int): Float {
-        val obtainedMarks: Int = this.toInt()
-        return (obtainedMarks / totalMarks).toFloat()
-    }
-
-    private fun calculateObtainedMarks(result: List<StudentMarkData>): String {
-        var marks = 0
-        for (i in 0 until result.size) {
-            marks += result[i].mark.toInt()
-        }
-        return marks.toString()
-    }
+    // ✅ The calculateObtainedMarks function is no longer needed since the API provides the total
+    // You can remove this function entirely
 
     private fun animateCounter(start: Float, end: Float, textView: View) {
         val animator = ValueAnimator.ofFloat(start, end)
@@ -366,7 +347,4 @@ class ReportCardActivity : AppCompatActivity() {
     }
 
     data class Exam(val id: String, val name: String, val maxMarks: String)
-//    data class StudentResult(val scholarId: String, val studentName: String, val examId: String, val examName: String, val subject: List<SubjectMark>)
-
-
 }

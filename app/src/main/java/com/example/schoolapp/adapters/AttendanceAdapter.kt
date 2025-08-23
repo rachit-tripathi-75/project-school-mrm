@@ -28,11 +28,11 @@ class AttendanceAdapter : RecyclerView.Adapter<AttendanceAdapter.ViewHolder>() {
         holder.tvStatus.text = record.status
 
         if (record.status == "1") {
-            holder.tvStatus.setBackgroundResource(R.drawable.status_present_background)
-            holder.tvStatus.text = "Present"
-        } else {
             holder.tvStatus.setBackgroundResource(R.drawable.status_absent_background)
             holder.tvStatus.text = "Absent"
+        } else {
+            holder.tvStatus.setBackgroundResource(R.drawable.status_present_background)
+            holder.tvStatus.text = "Present"
         }
     }
 

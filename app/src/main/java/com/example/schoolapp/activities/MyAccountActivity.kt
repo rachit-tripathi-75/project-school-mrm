@@ -8,7 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.bumptech.glide.Glide
 import com.example.schoolapp.R
+import com.example.schoolapp.classes.PrefsManager
 import com.example.schoolapp.databinding.ActivityMyAccountBinding
 
 class MyAccountActivity : AppCompatActivity() {
@@ -34,6 +36,16 @@ class MyAccountActivity : AppCompatActivity() {
     }
 
     private fun initialisers() {
+        // setting up the dp.....
+        val dpUrl = "https://erp.apschitrakoot.in/assets/doc/${PrefsManager.getUserDetailedInformation(this).studentData.get(0).studentImage}"
+        Glide.with(this) // Or requireContext() if 'this' is not a valid context
+            .load(dpUrl) // The URL of the image
+            .circleCrop() // Optional: Makes the image circular
+            .into(binding.profileImage) // The target ImageView
+
+        binding.tvStudentName.text = PrefsManager.getUserDetailedInformation(this).studentData.get(0).name
+        binding.tvStudentClassAndSection.text = PrefsManager.getUserDetailedInformation(this).studentData.get(0).sectionName
+        binding.tvStudentRollNumber.text = PrefsManager.getUserDetailedInformation(this).studentData.get(0).rollNumber
 
     }
 

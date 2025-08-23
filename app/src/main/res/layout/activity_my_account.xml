@@ -92,24 +92,27 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/tvStudentName"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Student Name"
+                                android:text=""
                                 android:textColor="@color/text_primary"
                                 android:textSize="22sp"
                                 android:textStyle="bold" />
 
                             <TextView
+                                android:id="@+id/tvStudentClassAndSection"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Class X - Section A"
+                                android:text=""
                                 android:textColor="@color/text_secondary"
                                 android:textSize="14sp" />
 
                             <TextView
+                                android:id="@+id/tvStudentRollNumber"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Roll No: 12345"
+                                android:text=""
                                 android:textColor="@color/text_secondary"
                                 android:textSize="14sp" />
                         </LinearLayout>
@@ -161,6 +164,7 @@
                     android:id="@+id/cvAcademicRecords"
                     style="@style/AccountOptionCard"
                     android:layout_marginBottom="8dp"
+                    android:visibility="gone"
                     android:backgroundTint="@color/white">
 
                     <LinearLayout style="@style/AccountOptionLayout">
@@ -228,6 +232,7 @@
                     android:id="@+id/cvPriacyAndSecurity"
                     style="@style/AccountOptionCard"
                     android:layout_marginBottom="8dp"
+                    android:visibility="gone"
                     android:backgroundTint="@color/white">
 
                     <LinearLayout style="@style/AccountOptionLayout">
@@ -261,6 +266,7 @@
                     android:id="@+id/cvSettings"
                     style="@style/AccountOptionCard"
                     android:layout_marginBottom="8dp"
+                    android:visibility="gone"
                     android:backgroundTint="@color/white">
 
                     <LinearLayout style="@style/AccountOptionLayout">

@@ -25,6 +25,7 @@ class PaymentHistoryFragment : Fragment() {
     private lateinit var binding: FragmentPaymentHistoryBinding
     private val paymentHistoryViewModel: PaymentHistoryViewModel by activityViewModels()
     private lateinit var paymentHistoryAdapter: PaymentHistoryAdapter
+    private val feeTypeMap = mapOf("1" to "Academic Fee", "3" to "Vehicle Fee", "5" to "Academic Fee")
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -116,7 +117,8 @@ class PaymentHistoryFragment : Fragment() {
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val record = paymentHistoryRecords[position]
-            holder.tvFeeType.text = "Fee Type: ${record.feeType}"
+            val feeName = feeTypeMap[record.feeType] ?: "Academic Fee (${record.feeType})"
+            holder.tvFeeType.text = "Fee Type: $feeName"
             holder.tvType.text = record.type
             holder.tvTransactionDate.text = "Transaction Date: " + getFormattedDateRange(record.transactionDate)
             holder.tvInstallment.text = "Installment: ${record.installment}"

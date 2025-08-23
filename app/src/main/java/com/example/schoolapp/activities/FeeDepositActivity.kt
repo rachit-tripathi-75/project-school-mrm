@@ -17,6 +17,7 @@ import com.example.schoolapp.activities.PersonalInformationActivity
 import com.example.schoolapp.adapters.FeeDepositViewPagerAdapter
 import com.example.schoolapp.adapters.StudentCommentViewPagerAdapter
 import com.example.schoolapp.classes.ApiClient
+import com.example.schoolapp.classes.PrefsManager
 import com.example.schoolapp.databinding.ActivityFeeDepositBinding
 import com.example.schoolapp.fragments.PaymentHistoryFragment
 import com.example.schoolapp.networks.NetworkChangeReceiver
@@ -44,7 +45,6 @@ class FeeDepositActivity : AppCompatActivity() {
             binding.llNoInternetFound.visibility = View.GONE
             binding.viewPager.visibility = View.VISIBLE
             initialisers()
-            fetchFeesInstallmentInformation()
             fetchPaymentHistoryInformation()
             Log.d("networkInterceptorTAG", "inside onNetworkConnected()")
 
@@ -61,7 +61,6 @@ class FeeDepositActivity : AppCompatActivity() {
 
 
     private lateinit var binding: ActivityFeeDepositBinding
-    private val feeInstallmentViewModel: FeeInstallmentViewModel by viewModels()
     private val paymentHistoryViewModel: PaymentHistoryViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,8 +76,7 @@ class FeeDepositActivity : AppCompatActivity() {
             insets
         }
 
-//        initialisers()
-//        fetchFeesInstallmentInformation()
+        initialisers()
 
     }
 
@@ -97,45 +95,7 @@ class FeeDepositActivity : AppCompatActivity() {
         }.attach()
     }
 
-    private fun fetchFeesInstallmentInformation() {
-        binding.viewPager.visibility = View.GONE
-        binding.llProgressBar.visibility = View.VISIBLE
-        lifecycleScope.launch {
-            try {
-                delay(1500)
-                ApiClient.feeInstallmentInstance.getFeeInstallments(
-                    "Bearer 8a56598bd5114ab31f6f70e76e1873e8945eafcd915b3f6ada4c0132d212a57e",
-                    "ci_session=21fd32pu9g5q2i3501kadta47r3uip7k",
-                    "1",
-                    "2025",
-                    "00092400001").enqueue(object: retrofit2.Callback<FeeInstallmentsResponse> {
 
-                    override fun onResponse(call: Call<FeeInstallmentsResponse?>, response: Response<FeeInstallmentsResponse?>) {
-                        binding.viewPager.visibility = View.VISIBLE
-                        binding.llProgressBar.visibility = View.GONE
-                        binding.tabLayout.visibility = View.VISIBLE
-                        if (response.isSuccessful && response.body() != null) {
-                            val s = response.body()
-                            val gson = Gson()
-                            if (s?.status == 1) {
-                                Log.d("feeInstallmentDetailTAG", "${gson.toJson(s)}}")
-                                feeInstallmentViewModel.setFeeInstallmentData(s)
-                            }
-                        }
-                    }
-
-                    override fun onFailure(call: Call<FeeInstallmentsResponse?>, t: Throwable) {
-                        binding.viewPager.visibility = View.VISIBLE
-                        binding.llProgressBar.visibility = View.GONE
-                        Log.d("feeInstallmentDetailTAG", "${t.message}")
-                    }
-
-                })
-            } catch (e: Exception) {
-                Toast.makeText(this@FeeDepositActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
 
     private fun fetchPaymentHistoryInformation() {
         binding.viewPager.visibility = View.GONE
@@ -143,7 +103,7 @@ class FeeDepositActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 delay(1500)
-                val s = PaymentHistoryRequest("1675") // this is enrollment number, ye preference manager se fetch hoga......!!!
+                val s = PaymentHistoryRequest(PrefsManager.getUserDetailedInformation(applicationContext).studentData.get(0).enrollment) // this is enrollment number, ye preference manager se fetch hoga......!!!
                 ApiClient.paymentHistoryInstance.getStudentPaymentHistory(
                     "Bearer TOKEN_REQUIRED......",
                     "application/json",
