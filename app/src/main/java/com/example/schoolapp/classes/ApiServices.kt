@@ -1,6 +1,7 @@
 package com.example.schoolapp.classes
 
 
+import com.example.schoolapp.requests.GetMarksRequest
 import com.example.schoolapp.requests.PaymentHistoryRequest
 import com.example.schoolapp.requests.UpdateFcmTokenRequest
 import com.example.schoolapp.responses.AcademicPlanResponse
@@ -42,13 +43,11 @@ class ApiServices {
     }
 
     interface GetMarksApiService {
-        @FormUrlEncoded
         @POST("API/getMarks")
         fun getMarks(
-            @Header("Authorization") authorization: String,
-            @Header("Cookie") cookie: String,
-            @Field("scholar") enrollmentNumber: String,
-            @Field("examid") examId: String
+            @Header("Content-Type") authorization: String,
+            @Header("Authorization") cookie: String,
+            @Body getMarksRequest: GetMarksRequest
         ): Call<GetMarksResponse>
     }
 

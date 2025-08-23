@@ -274,26 +274,33 @@ class SubjectNotesActivity : AppCompatActivity() {
     fun createDownloadFinishedNotification(context: Context, uri: Uri?): Notification {
         Log.d("urivalue", "uri:" + uri.toString())
 
-//        val openIntent = Intent(Intent.ACTION_VIEW).apply {
-//            setDataAndType(uri, "application/pdf")
-//            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
-//        }
-//
-//        val pendingIntent = PendingIntent.getActivity(
-//            context,
-//            0,
-//            openIntent,
-//            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-//        )
+        // Create an Intent to open the PDF if the download was successful
+        val openIntent = if (uri != null) {
+            Intent(Intent.ACTION_VIEW).apply {
+                setDataAndType(uri, "application/pdf")
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
+            }
+        } else {
+            // If the download failed, the notification won't do anything on tap
+            Intent()
+        }
+
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            0,
+            openIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
 
         return NotificationCompat.Builder(context, APS_DOWNLOAD_NOTIFICATION_CHANNEL_ID)
-            .setContentTitle("Download Finished")
-            .setContentText("Tap to view the PDF")
+            .setContentTitle(if (uri != null) "Download Finished" else "Download Failed")
+            .setContentText(if (uri != null) "Tap to view the PDF" else "Could not download file.")
             .setSmallIcon(android.R.drawable.stat_sys_download_done)
             .setAutoCancel(true)
-//            .setContentIntent(pendingIntent)
+            .setContentIntent(pendingIntent)
+            .setProgress(0, 0, false)
+            .setOngoing(false)
             .build()
-
     }
 
     fun saveFileToScopedStorage(context: Context, fileName: String): Uri? {
@@ -342,23 +349,27 @@ class SubjectNotesActivity : AppCompatActivity() {
                     "Bearer TOKEN required.......",
                     "application/x-www-form-urlencoded",
                     "ci_session=r5p9d5d8b41l8fn13msacrh7n4ff9sm4",
-                    PrefsManager.getSectionId(applicationContext)).enqueue(object: retrofit2.Callback<SubjectNotesResponse> {
+                    PrefsManager.getUserDetailedInformation(applicationContext).studentData.get(0).sectionId).enqueue(object: retrofit2.Callback<SubjectNotesResponse> {
 
                     override fun onResponse(call: Call<SubjectNotesResponse?>, response: Response<SubjectNotesResponse?>) {
                         showLoading(false)
+                        val gson = Gson()
                         if (response.isSuccessful && response.body() != null) {
                             val subjectNotes = response.body()
                             if (subjectNotes != null && subjectNotes.status == 1 && subjectNotes.data.isNotEmpty()) {
                                 binding.llNoDataFound.visibility = View.GONE
                                 path = subjectNotes.path
-                                setDataToRecyclerView(subjectNotes.data)
+                                setDataToRecyclerView(subjectNotes.data.reversed())
+                                Log.d("subjectNotesTAG", "if: " + gson.toJson(response.body()))
                             } else {
                                 binding.llNoDataFound.visibility = View.VISIBLE
                                 binding.coordinatorLayoutMainContent.visibility = View.GONE
+                                Log.d("subjectNotesTAG", "else: " + gson.toJson(response.body()))
 //                                Toast.makeText(this@SubjectNotesActivity, "No notes found", Toast.LENGTH_SHORT).show()
                             }
                         } else {
                             showError("Something went wrong!")
+                            Log.d("subjectNotesTAG", "something went wrong: " + gson.toJson(response.body()))
                         }
 
                     }

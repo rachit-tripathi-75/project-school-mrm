@@ -113,6 +113,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:textSize="12sp"
+            android:visibility="invisible"
             app:chipBackgroundColor="@color/chip_background_green"
             app:chipMinHeight="32dp"
             app:layout_constraintStart_toStartOf="parent"

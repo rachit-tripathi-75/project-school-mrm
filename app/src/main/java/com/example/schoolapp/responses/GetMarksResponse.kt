@@ -1,19 +1,24 @@
 package com.example.schoolapp.responses
 
+import com.google.gson.annotations.SerializedName
+
 data class GetMarksResponse(
-    val Msg: String,
+    @SerializedName("Msg") val msg: String,
     val type: String,
     val status: Int,
-    val data: List<StudentMarkData>
+    val data: MarksData
 )
 
-data class StudentMarkData(
-    val sst_id: String,
-    val stu_id: String,
+data class MarksData(
+    @SerializedName("student_name") val studentName: String,
     val scholar: String,
-    val StudName: String,
-    val exam_id: String,
-    val ExamName: String,
-    val mark: String,
-    val sessionid: String
+    val marks: List<SubjectMark>,
+    @SerializedName("Totalmm") val totalMaxMarks: Int,
+    @SerializedName("Totalob") val totalObtainedMarks: Int
+)
+
+data class SubjectMark(
+    val marks: String,
+    val subject: String?,
+    @SerializedName("MM") val maxMarks: String
 )

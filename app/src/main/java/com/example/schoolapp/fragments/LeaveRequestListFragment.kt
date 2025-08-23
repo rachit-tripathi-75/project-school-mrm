@@ -91,7 +91,7 @@ class LeaveRequestListFragment : Fragment() {
 
         lifecycleScope.launch {
             try {
-                delay(1500) // optional: you can remove this delay
+                delay(1500)
                 ApiClient.leaveRequestListInstance.getStudentLeaveRequests(
                     "application/x-www-form-urlencoded",
                     "ci_session=tjfo3rn4v6anihl635kh20n2bbm5liup",

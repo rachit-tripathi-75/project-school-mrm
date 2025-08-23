@@ -20,6 +20,7 @@ import androidx.core.content.edit
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
+import com.bumptech.glide.Glide
 import com.example.schoolapp.activities.ContactUsActivity
 import com.example.schoolapp.activities.LoginActivity
 import com.example.schoolapp.activities.MyAccountActivity
@@ -150,6 +151,12 @@ class MainActivity : AppCompatActivity() {
             binding.tvWelcomeHeader.text =
                 "Welcome, ${PrefsManager.getUserInformation(this@MainActivity).data.name}"
         }
+
+        val dpUrl = "https://erp.apschitrakoot.in/assets/doc/${PrefsManager.getUserDetailedInformation(this).studentData.get(0).studentImage}"
+        Glide.with(this)
+            .load(dpUrl)
+            .circleCrop()
+            .into(navigationHeaderBinding.profileImage)
 
 
 

@@ -163,12 +163,12 @@ class AcademicCalendarActivity : AppCompatActivity() {
             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
             val filteredList = plans.filter { plan ->
-                try {
+                plan.announcedLater == "0" || try {
                     val fromDate = LocalDate.parse(plan.fromDate, formatter)
                     val toDate = LocalDate.parse(plan.toDate, formatter)
                     !currentDate.isBefore(fromDate) && !currentDate.isAfter(toDate)
                 } catch (e: Exception) {
-                    false // skip invalid date formats
+                    false
                 }
             }
 

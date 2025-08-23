@@ -134,10 +134,13 @@ class NoticeBoardActivity : AppCompatActivity() {
 
                         if (notices.data.isEmpty()) {
                             Toast.makeText(this@NoticeBoardActivity, "No notices found", Toast.LENGTH_SHORT).show()
+                            noticeBoardAdapter.setNoticeBoard(emptyList())
                             return
                         }
-
-                        val records = notices.data.map { s ->
+                        val records = notices.data.filter { notice ->
+                            notice.type.equals("both", ignoreCase = true) ||
+                                    notice.type.equals("student", ignoreCase = true)
+                        }.map { s ->
                             NoticeBoardRecord(notices.path, s.id, s.title, s.date_from, s.date, s.type, s.doc, s.created_on, s.status, s.NoticeType, s.sessionid, s.created_on)
                         }
 

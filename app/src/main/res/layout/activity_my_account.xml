@@ -101,7 +101,7 @@
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/tvClassAndSection"
+                                android:id="@+id/tvStudentClassAndSection"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text=""
@@ -109,10 +109,10 @@
                                 android:textSize="14sp" />
 
                             <TextView
-                                android:id="@+id/tvRollNumber"
+                                android:id="@+id/tvStudentRollNumber"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Enrollment No: "
+                                android:text=""
                                 android:textColor="@color/text_secondary"
                                 android:textSize="14sp" />
                         </LinearLayout>
@@ -150,7 +150,7 @@
 
                             <TextView
                                 style="@style/OptionDescription"
-                                android:text="View your personal details" />
+                                android:text="Update your personal details" />
                         </LinearLayout>
 
                         <ImageView
