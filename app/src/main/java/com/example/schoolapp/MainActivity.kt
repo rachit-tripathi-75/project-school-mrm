@@ -139,28 +139,30 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun initialise() {
-
         val headerView = binding.navigationView.getHeaderView(0)
         navigationHeaderBinding = NavHeaderBinding.bind(headerView)
 
-        if (PrefsManager.getUserInformation(this@MainActivity) != null) {
-            navigationHeaderBinding.tvStudentEmail.text =
-                PrefsManager.getUserInformation(this@MainActivity).data.email
-            navigationHeaderBinding.tvStudentName.text =
-                PrefsManager.getUserInformation(this@MainActivity).data.name
-            binding.tvWelcomeHeader.text =
-                "Welcome, ${PrefsManager.getUserInformation(this@MainActivity).data.name}"
+        // ✅ The variables are now nullable, so the crash is prevented here.
+        val userInfo = PrefsManager.getUserInformation(this)
+        val userDetails = PrefsManager.getUserDetailedInformation(this)
+
+        if (userInfo != null && userDetails != null) {
+            navigationHeaderBinding.tvStudentEmail.text = userInfo.data.email
+            navigationHeaderBinding.tvStudentName.text = userInfo.data.name
+            binding.tvWelcomeHeader.text = "Welcome, ${userInfo.data.name}"
+
+            val dpUrl = "https://erp.apschitrakoot.in/assets/doc/${userDetails.studentData.get(0).studentImage}"
+            Glide.with(this)
+                .load(dpUrl)
+                .circleCrop()
+                .into(navigationHeaderBinding.profileImage)
+        } else {
+
+            Toast.makeText(this, "User session expired or data not found. Please log in again.", Toast.LENGTH_LONG).show()
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
         }
-
-        val dpUrl = "https://erp.apschitrakoot.in/assets/doc/${PrefsManager.getUserDetailedInformation(this).studentData.get(0).studentImage}"
-        Glide.with(this)
-            .load(dpUrl)
-            .circleCrop()
-            .into(navigationHeaderBinding.profileImage)
-
-
-
-
     }
 
     private fun listeners() {

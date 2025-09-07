@@ -90,7 +90,7 @@ class PayFeesFragment : Fragment() {
 
     private fun listeners() {
         val finalUrl = "$BASE_PAYMENT_URL${
-            PrefsManager.getUserDetailedInformation(requireContext()).studentData.get(0).studentId
+            PrefsManager.getUserDetailedInformation(requireContext())?.studentData!!.get(0).studentId
         }"
         Log.d("PaymentURL", "Loading URL: $finalUrl")
         binding.webView.loadUrl(finalUrl)

@@ -56,25 +56,25 @@ class MyFirebaseNotificationService : FirebaseMessagingService() {
         super.onNewToken(token)
         // api to store the generated token in the server.......
 
-        val s = UpdateFcmTokenRequest(PrefsManager.getUserDetailedInformation(this).studentData.get(0).enrollment, token)
-        ApiClient.updateFcmTokenInstance.updateFcmToken(
-            "application/json",
-            "ci_session=iud5psvipvp7npbc74oi9thgkbaoq0m0",
-            s
-        ).enqueue(object : retrofit2.Callback<UpdateFcmTokenResponse> {
-            override fun onResponse(
-                call: Call<UpdateFcmTokenResponse>,
-                response: retrofit2.Response<UpdateFcmTokenResponse>
-            ) {
-                if (response.isSuccessful) {
-                    Log.d("onNewTokenTAG", response.body()?.Msg!!)
-                }
-            }
-
-            override fun onFailure(call: Call<UpdateFcmTokenResponse>, t: Throwable) {
-                Log.d("onNewTokenTAG", "onFailure: " + t.message)
-            }
-        })
+//        val s = UpdateFcmTokenRequest(PrefsManager.getUserDetailedInformation(this).studentData.get(0).enrollment, token)
+//        ApiClient.updateFcmTokenInstance.updateFcmToken(
+//            "application/json",
+//            "ci_session=iud5psvipvp7npbc74oi9thgkbaoq0m0",
+//            s
+//        ).enqueue(object : retrofit2.Callback<UpdateFcmTokenResponse> {
+//            override fun onResponse(
+//                call: Call<UpdateFcmTokenResponse>,
+//                response: retrofit2.Response<UpdateFcmTokenResponse>
+//            ) {
+//                if (response.isSuccessful) {
+//                    Log.d("onNewTokenTAG", response.body()?.Msg!!)
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<UpdateFcmTokenResponse>, t: Throwable) {
+//                Log.d("onNewTokenTAG", "onFailure: " + t.message)
+//            }
+//        })
 
 
     }

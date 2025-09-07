@@ -349,7 +349,7 @@ class SubjectNotesActivity : AppCompatActivity() {
                     "Bearer TOKEN required.......",
                     "application/x-www-form-urlencoded",
                     "ci_session=r5p9d5d8b41l8fn13msacrh7n4ff9sm4",
-                    PrefsManager.getUserDetailedInformation(applicationContext).studentData.get(0).sectionId).enqueue(object: retrofit2.Callback<SubjectNotesResponse> {
+                    PrefsManager.getUserDetailedInformation(applicationContext)?.studentData!!.get(0).sectionId).enqueue(object: retrofit2.Callback<SubjectNotesResponse> {
 
                     override fun onResponse(call: Call<SubjectNotesResponse?>, response: Response<SubjectNotesResponse?>) {
                         showLoading(false)

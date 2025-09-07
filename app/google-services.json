@@ -7,6 +7,25 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:485005662570:android:3b88d371847f20fbbf2d13",
+        "android_client_info": {
+          "package_name": "com.example.apsschoolapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPXSSM7El4YO5XIXn6f3yvvTc0XjpOpSI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:485005662570:android:ed4f55edb20ae2bebf2d13",
         "android_client_info": {
           "package_name": "com.example.schoolapp"

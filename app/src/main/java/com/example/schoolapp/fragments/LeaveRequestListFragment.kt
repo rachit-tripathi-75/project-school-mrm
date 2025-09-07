@@ -95,7 +95,7 @@ class LeaveRequestListFragment : Fragment() {
                 ApiClient.leaveRequestListInstance.getStudentLeaveRequests(
                     "application/x-www-form-urlencoded",
                     "ci_session=tjfo3rn4v6anihl635kh20n2bbm5liup",
-                    PrefsManager.getUserDetailedInformation(requireContext()).studentData.get(0).enrollment
+                    PrefsManager.getUserDetailedInformation(requireContext())?.studentData!!.get(0).enrollment
                 ).enqueue(object : retrofit2.Callback<GetStudentLeaveRequestResponse> {
 
                     override fun onResponse(

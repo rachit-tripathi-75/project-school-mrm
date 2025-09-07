@@ -103,7 +103,7 @@ class FeeDepositActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 delay(1500)
-                val s = PaymentHistoryRequest(PrefsManager.getUserDetailedInformation(applicationContext).studentData.get(0).enrollment) // this is enrollment number, ye preference manager se fetch hoga......!!!
+                val s = PaymentHistoryRequest(PrefsManager.getUserDetailedInformation(applicationContext)?.studentData!!.get(0).enrollment) // this is enrollment number, ye preference manager se fetch hoga......!!!
                 ApiClient.paymentHistoryInstance.getStudentPaymentHistory(
                     "Bearer TOKEN_REQUIRED......",
                     "application/json",

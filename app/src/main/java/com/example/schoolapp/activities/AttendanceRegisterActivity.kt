@@ -155,63 +155,77 @@ class AttendanceRegisterActivity : AppCompatActivity() {
     }
 
     private fun loadAttendanceData(month: String) {
-        // loaded data from a database or API........
-
         Log.d("herexx", "here0")
         binding.progressBar.visibility = View.VISIBLE
         binding.attendanceRecyclerView.visibility = View.GONE
         binding.llNoDataFound.visibility = View.GONE
         binding.llInternalServerError.visibility = View.GONE
-        Log.d("monthxxx", month)
-        Log.d("studentIdxxx", PrefsManager.getUserInformation(applicationContext).data.stu_id);
 
-        lifecycleScope.launch {
-            try {
-                delay(1500)
-                ApiClient.attendanceInstance.getStudentAttendance(
-                    "Bearer YOUR_TOKEN",
-                    "application/x-www-form-urlencoded",
-                    "ci_session=2t8pu97bd55ljkpucvq2jlt74fklsrhg",
-                    PrefsManager.getUserDetailedInformation(applicationContext).studentData.get(0).sidInc,
-                    month).enqueue(object: retrofit2.Callback<AttendanceResponse> {
+        // ✅ Get the required user data safely
+        val userInfo = PrefsManager.getUserInformation(applicationContext)
+        val userDetailedInfo = PrefsManager.getUserDetailedInformation(applicationContext)
 
-                    override fun onResponse(call: Call<AttendanceResponse?>, response: Response<AttendanceResponse?>) {
-                        binding.progressBar.visibility = View.GONE
-                        binding.attendanceRecyclerView.visibility = View.VISIBLE
-                        if (response.isSuccessful && response.body() != null) {
-                            val s = response.body()
-                            val gson = Gson()
-                            if (s?.status == 1 && s.data.isNotEmpty()) {
-                                Log.d("herexx", "here1")
-                                Log.d("attendanceTAG", "${PrefsManager.getUserInformation(applicationContext).data.stu_id}")
-                                setDataToAdapter(s)
+        // ✅ Use a null-safe block to ensure data exists before making the API call
+        if (userInfo != null && userDetailedInfo != null) {
+            val sidInc = userDetailedInfo.studentData.firstOrNull()?.sidInc
+            val studentId = userInfo.data.stu_id
 
-                            } else {
-                                binding.llNoDataFound.visibility = View.VISIBLE
-                                binding.attendanceRecyclerView.visibility = View.GONE
-                                Log.d("herexx", "here2")
+            if (sidInc != null && studentId != null) {
+                Log.d("monthxxx", month)
+                Log.d("studentIdxxx", studentId)
+
+                lifecycleScope.launch {
+                    try {
+                        delay(1500)
+                        ApiClient.attendanceInstance.getStudentAttendance(
+                            "Bearer YOUR_TOKEN",
+                            "application/x-www-form-urlencoded",
+                            "ci_session=2t8pu97bd55ljkpucvq2jlt74fklsrhg",
+                            sidInc, // ✅ Use the safely-retrieved ID
+                            month
+                        ).enqueue(object: retrofit2.Callback<AttendanceResponse> {
+                            override fun onResponse(call: Call<AttendanceResponse?>, response: Response<AttendanceResponse?>) {
+                                binding.progressBar.visibility = View.GONE
+                                binding.attendanceRecyclerView.visibility = View.VISIBLE
+                                if (response.isSuccessful && response.body() != null) {
+                                    val s = response.body()
+                                    if (s?.status == 1 && s.data.isNotEmpty()) {
+                                        Log.d("herexx", "here1")
+                                        Log.d("attendanceTAG", studentId)
+                                        setDataToAdapter(s)
+                                    } else {
+                                        binding.llNoDataFound.visibility = View.VISIBLE
+                                        binding.attendanceRecyclerView.visibility = View.GONE
+                                        Log.d("herexx", "here2")
+                                    }
+                                } else {
+                                    Log.d("herexx", "here2.5")
+                                }
                             }
-                        } else {
-                            // will only be here, if either student_id or month is entered wrong, which never gonna occur
-                        }
-                    }
 
-                    override fun onFailure(call: Call<AttendanceResponse?>, t: Throwable) {
-                        binding.progressBar.visibility = View.GONE
-                        binding.attendanceRecyclerView.visibility = View.GONE
-                        binding.llInternalServerError.visibility = View.VISIBLE
-                        Log.d("attendanceTAG", "${t.message}")
-                        Log.d("herexx", "here3")
+                            override fun onFailure(call: Call<AttendanceResponse?>, t: Throwable) {
+                                binding.progressBar.visibility = View.GONE
+                                binding.attendanceRecyclerView.visibility = View.GONE
+                                binding.llInternalServerError.visibility = View.VISIBLE
+                                Log.d("attendanceTAG", "${t.message}")
+                                Log.d("herexx", "here3")
+                            }
+                        })
+                    } catch (e: Exception) {
+                        Toast.makeText(this@AttendanceRegisterActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                        Log.d("herexx", "here4")
                     }
-
-                })
-            } catch (e: Exception) {
-                Toast.makeText(this@AttendanceRegisterActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
-                Log.d("herexx", "here4")
+                }
+            } else {
+                // Handle case where user data is incomplete
+                Toast.makeText(this, "User data is incomplete. Please log in again.", Toast.LENGTH_SHORT).show()
+                binding.progressBar.visibility = View.GONE
             }
+        } else {
+            // Handle case where user is not logged in
+            Toast.makeText(this, "User not logged in. Please log in first.", Toast.LENGTH_SHORT).show()
+            binding.progressBar.visibility = View.GONE
         }
-
-
     }
 
     override fun onResume() {

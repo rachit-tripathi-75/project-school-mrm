@@ -156,8 +156,8 @@ class ReportCardActivity : AppCompatActivity() {
             onBackPressed()
         }
         binding.btnSearch.setOnClickListener {
-            Log.d("btnsearchxxx", PrefsManager.getUserDetailedInformation(applicationContext).studentData.get(0).studentId)
-            Log.d("btnsearchxxx", "sidinc: " + PrefsManager.getUserDetailedInformation(applicationContext).studentData.get(0).sidInc)
+            Log.d("btnsearchxxx", PrefsManager.getUserDetailedInformation(applicationContext)?.studentData!!.get(0).studentId)
+            Log.d("btnsearchxxx", "sidinc: " + PrefsManager.getUserDetailedInformation(applicationContext)?.studentData!!.get(0).sidInc)
             val selectedExamName = (binding.spinnerExam as? AutoCompleteTextView)?.text.toString()
 
             val selectedExam = exams.firstOrNull { it.name == selectedExamName }
@@ -199,7 +199,7 @@ class ReportCardActivity : AppCompatActivity() {
                 delay(1500)
 
                 val userDetails = PrefsManager.getUserDetailedInformation(applicationContext)
-                val scholarId = userDetails.studentData.get(0).sidInc
+                val scholarId = userDetails?.studentData!!.get(0).sidInc
                 val s = GetMarksRequest(scholarId.toInt(), examId.toInt())
 
                 ApiClient.getMarksInstance.getMarks(

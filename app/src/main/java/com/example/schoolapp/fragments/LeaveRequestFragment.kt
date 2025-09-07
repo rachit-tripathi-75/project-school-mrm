@@ -177,7 +177,7 @@ class LeaveRequestFragment : Fragment() {
                 ApiClient.submitLeaveRequestInstance.submitLeaveRequest(
                     "application/x-www-form-urlencoded",
                     "ci_session=giedbf3v4u7lahicjd40sf8ridgpgj9i",
-                    PrefsManager.getUserDetailedInformation(requireContext()).studentData.get(0).enrollment,
+                    PrefsManager.getUserDetailedInformation(requireContext())?.studentData!!.get(0).enrollment,
                     binding.actvLeaveType.text.toString().trim(),
                     binding.etStartDate.text.toString().trim(),
                     binding.etEndDate.text.toString().trim(),

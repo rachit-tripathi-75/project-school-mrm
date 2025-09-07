@@ -37,15 +37,15 @@ class MyAccountActivity : AppCompatActivity() {
 
     private fun initialisers() {
         // setting up the dp.....
-        val dpUrl = "https://erp.apschitrakoot.in/assets/doc/${PrefsManager.getUserDetailedInformation(this).studentData.get(0).studentImage}"
+        val dpUrl = "https://erp.apschitrakoot.in/assets/doc/${PrefsManager.getUserDetailedInformation(this)?.studentData!!.get(0).studentImage}"
         Glide.with(this) // Or requireContext() if 'this' is not a valid context
             .load(dpUrl) // The URL of the image
             .circleCrop() // Optional: Makes the image circular
             .into(binding.profileImage) // The target ImageView
 
-        binding.tvStudentName.text = PrefsManager.getUserDetailedInformation(this).studentData.get(0).name
-        binding.tvStudentClassAndSection.text = PrefsManager.getUserDetailedInformation(this).studentData.get(0).sectionName
-        binding.tvStudentRollNumber.text = PrefsManager.getUserDetailedInformation(this).studentData.get(0).rollNumber
+        binding.tvStudentName.text = PrefsManager.getUserDetailedInformation(this)?.studentData!!.get(0).name
+        binding.tvStudentClassAndSection.text = PrefsManager.getUserDetailedInformation(this)?.studentData!!.get(0).sectionName
+        binding.tvStudentRollNumber.text = PrefsManager.getUserDetailedInformation(this)?.studentData!!.get(0).rollNumber
 
     }
 
